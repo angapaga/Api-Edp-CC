@@ -22,7 +22,11 @@ const routes: Routes = [
   {
     path: 'calidadmateriaprima',
     loadChildren: () => import('./pages/calidadmateriaprima/calidadmateriaprima.module').then( m => m.CalidadmateriaprimaPageModule)
+  },  {
+    path: 'edp-cc-inicio',
+    loadChildren: () => import('./edp-cc-inicio/edp-cc-inicio.module').then( m => m.EdpCcInicioPageModule)
   },
+
 ];
 
 @NgModule({
