@@ -13,4 +13,21 @@
       <ion-title size="large">panelsabor</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <div class="center">
+    <ion-card *ngFor="let item of menuItems">
+    
+      <ion-card-header routerLink="/{{ item.urllink }}">
+        <ion-card-title>{{item.titulo}}</ion-card-title>
+        <!-- <ion-card-subtitle>Card Subtitle</ion-card-subtitle> -->
+      </ion-card-header>
+      <!-- <ion-card-content>
+        hola
+      </ion-card-content> -->
+    </ion-card>
+  </div>
+
 </ion-content>
+
+<!-- <ion-content [fullscreen]="true">
+</ion-content> -->
