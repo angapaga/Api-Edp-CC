@@ -8,36 +8,32 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'start',
+    redirectTo: 'edp-cc-start',
     pathMatch: 'full'
   },
   {
-    path: 'login',
-    loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
+    path: 'edp-cc-panelespendientes',
+    loadChildren: () => import('./pages/edp-cc-panelespendientes/edp-cc-panelespendientes.module').then( m => m.EdpCcPanelespendientesPageModule)
   },
   {
-    path: 'menu',
-    loadChildren: () => import('./pages/menu/menu.module').then( m => m.MenuPageModule)
+    path: 'edp-cc-calidadmateriaprima',
+    loadChildren: () => import('./pages/edp-cc-calidadmateriaprima/edp-cc-calidadmateriaprima.module').then( m => m.EdpCcCalidadmateriaprimaPageModule)
   },
   {
-    path: 'calidadmateriaprima',
-    loadChildren: () => import('./pages/calidadmateriaprima/calidadmateriaprima.module').then( m => m.CalidadmateriaprimaPageModule)
+    path: 'edp-cc-start',
+    loadChildren: () => import('./pages/edp-cc-start/edp-cc-start.module').then( m => m.EdpCcStartPageModule)
   },
   {
-    path: 'calidadproductoproceso',
-    loadChildren: () => import('./pages/calidadproductoproceso/calidadproductoproceso.module').then( m => m.CalidadproductoprocesoPageModule)
+    path: 'edp-cc-panelsabor',
+    loadChildren: () => import('./pages/edp-cc-panelsabor/edp-cc-panelsabor.module').then( m => m.EdpCcPanelsaborPageModule)
   },
   {
-    path: 'calidadproductoterminado',
-    loadChildren: () => import('./pages/calidadproductoterminado/calidadproductoterminado.module').then( m => m.CalidadproductoterminadoPageModule)
+    path: 'edp-cc-login',
+    loadChildren: () => import('./pages/edp-cc-login/edp-cc-login.module').then( m => m.EdpCcLoginPageModule)
   },
   {
-    path: 'panelsabor',
-    loadChildren: () => import('./pages/panelsabor/panelsabor.module').then( m => m.PanelsaborPageModule)
-  },
-  {
-    path: 'start',
-    loadChildren: () => import('./pages/start/start.module').then( m => m.StartPageModule)
+    path: 'edp-cc-home',
+    loadChildren: () => import('./pages/edp-cc-home/edp-cc-home.module').then( m => m.EdpCcHomePageModule)
   },
   
 ];

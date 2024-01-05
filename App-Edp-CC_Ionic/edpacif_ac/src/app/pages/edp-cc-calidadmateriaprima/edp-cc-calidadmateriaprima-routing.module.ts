@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { CalidadproductoterminadoPage } from './calidadproductoterminado.page';
+import { EdpCcCalidadmateriaprimaPage } from './edp-cc-calidadmateriaprima.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: CalidadproductoterminadoPage
+    component: EdpCcCalidadmateriaprimaPage
   }
 ];
 
@@ -14,4 +14,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class CalidadproductoterminadoPageRoutingModule {}
+export class EdpCcCalidadmateriaprimaPageRoutingModule {}

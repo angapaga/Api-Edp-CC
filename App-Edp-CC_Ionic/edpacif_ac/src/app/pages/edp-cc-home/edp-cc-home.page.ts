@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { menuItem } from '../../models/menuItem.model';
 
 @Component({
-  selector: 'app-menu',
-  templateUrl: './menu.page.html',
-  styleUrls: ['./menu.page.scss'],
+  selector: 'app-edp-cc-home',
+  templateUrl: './edp-cc-home.page.html',
+  styleUrls: ['./edp-cc-home.page.scss'],
 })
-export class MenuPage implements OnInit {
+export class EdpCcHomePage implements OnInit {
 
   //definicion de variables
   menuItems: menuItem[];
@@ -14,7 +14,7 @@ export class MenuPage implements OnInit {
   constructor() {
 
     this.menuItems = [
-      new menuItem('Calidad de Materia Prima','','','calidadmateriaprima'),
+      new menuItem('Calidad de Materia Prima','','','edp-cc-calidadmateriaprima'),
       new menuItem('Calidad de Producto en Proceso','','','calidadproductoproceso'),
       new menuItem('Calidad de Producto Terminado','','','calidadproductoterminado'),
     ]

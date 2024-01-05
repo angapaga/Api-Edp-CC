@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { MenuPageRoutingModule } from './menu-routing.module';
+import { EdpCcPanelsaborPageRoutingModule } from './edp-cc-panelsabor-routing.module';
 
-import { MenuPage } from './menu.page';
+import { EdpCcPanelsaborPage } from './edp-cc-panelsabor.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    MenuPageRoutingModule
+    EdpCcPanelsaborPageRoutingModule
   ],
-  declarations: [MenuPage]
+  declarations: [EdpCcPanelsaborPage]
 })
-export class MenuPageModule {}
+export class EdpCcPanelsaborPageModule {}

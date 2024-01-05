@@ -3,20 +3,20 @@ import { NavController } from '@ionic/angular';
 import { menuItem } from '../../models/menuItem.model';
 
 @Component({
-  selector: 'app-panelsabor',
-  templateUrl: './panelsabor.page.html',
-  styleUrls: ['./panelsabor.page.scss'],
+  selector: 'app-edp-cc-panelsabor',
+  templateUrl: './edp-cc-panelsabor.page.html',
+  styleUrls: ['./edp-cc-panelsabor.page.scss'],
 })
-export class PanelsaborPage implements OnInit {
-  
+export class EdpCcPanelsaborPage implements OnInit {
+
   //definicion de variables
   menuItems: menuItem[];
   constructor(private navCtrl: NavController) { 
 
     this.menuItems = [
       // new menuItem('Calidad de Materia Prima','','','calidadmateriaprima'),
-      new menuItem('Consolidar Paneles','','','consolidadpaneles'),
-      new menuItem('Consulta de Paneles Pendientes','','','panelespendientes'),
+      new menuItem('Consolidar Paneles','','','edp-cc-consolidadpaneles'),
+      new menuItem('Consulta de Paneles Pendientes','','','edp-cc-panelespendientes'),
     ]
 
   }

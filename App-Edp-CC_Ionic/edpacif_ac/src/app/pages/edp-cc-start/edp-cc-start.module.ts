@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { PanelsaborPageRoutingModule } from './panelsabor-routing.module';
+import { EdpCcStartPageRoutingModule } from './edp-cc-start-routing.module';
 
-import { PanelsaborPage } from './panelsabor.page';
+import { EdpCcStartPage } from './edp-cc-start.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    PanelsaborPageRoutingModule
+    EdpCcStartPageRoutingModule
   ],
-  declarations: [PanelsaborPage]
+  declarations: [EdpCcStartPage]
 })
-export class PanelsaborPageModule {}
+export class EdpCcStartPageModule {}
