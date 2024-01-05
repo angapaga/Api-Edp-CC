@@ -23,6 +23,19 @@ const routes: Routes = [
     path: 'calidadmateriaprima',
     loadChildren: () => import('./pages/calidadmateriaprima/calidadmateriaprima.module').then( m => m.CalidadmateriaprimaPageModule)
   },
+  {
+    path: 'calidadproductoproceso',
+    loadChildren: () => import('./pages/calidadproductoproceso/calidadproductoproceso.module').then( m => m.CalidadproductoprocesoPageModule)
+  },
+  {
+    path: 'calidadproductoterminado',
+    loadChildren: () => import('./pages/calidadproductoterminado/calidadproductoterminado.module').then( m => m.CalidadproductoterminadoPageModule)
+  },
+  {
+    path: 'panelsabor',
+    loadChildren: () => import('./pages/panelsabor/panelsabor.module').then( m => m.PanelsaborPageModule)
+  },
+  
 ];
 
 @NgModule({
