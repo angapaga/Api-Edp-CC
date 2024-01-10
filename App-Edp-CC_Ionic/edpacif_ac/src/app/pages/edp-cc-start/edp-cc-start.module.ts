@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { LoginPageRoutingModule } from './login-routing.module';
+import { EdpCcStartPageRoutingModule } from './edp-cc-start-routing.module';
 
-import { LoginPage } from './login.page';
+import { EdpCcStartPage } from './edp-cc-start.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    LoginPageRoutingModule
+    EdpCcStartPageRoutingModule
   ],
-  declarations: [LoginPage]
+  declarations: [EdpCcStartPage]
 })
-export class LoginPageModule {}
+export class EdpCcStartPageModule {}
