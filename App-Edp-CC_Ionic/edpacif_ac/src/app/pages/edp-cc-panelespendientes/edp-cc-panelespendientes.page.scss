@@ -1,0 +1,46 @@
+.tamaño{
+    font-size: 26px;
+}
+
+.tamaño1{
+    font-size: 22px;
+}
+
+
+ion-grid {
+    --ion-grid-padding: auto;
+  
+    --ion-grid-padding-xs: auto;
+    --ion-grid-padding-sm: auto;
+    --ion-grid-padding-md: auto;
+    --ion-grid-padding-lg: auto;
+    --ion-grid-padding-xl: auto;
+  
+    --ion-grid-column-padding: auto;
+  
+    --ion-grid-column-padding-xs: auto;
+    --ion-grid-column-padding-sm: auto;
+    --ion-grid-column-padding-md: auto;
+    --ion-grid-column-padding-lg: auto;
+    --ion-grid-column-padding-xl: auto;
+  }
+
+  .cabecera{
+    background-color:rgb(185, 255, 151);;//rgb(153, 153, 152);
+    border: solid 1px #000000;
+    color: #000000;
+    text-align: center;
+    font-size: 20px;
+    padding: 2px;
+    padding-top: 3px ; 
+    padding-bottom: 3px ;
+    font-style: bold;
+  }
+  
+  .detalle {
+    background-color: #fff3da;
+    border: solid 1px #000000;
+    color: #000000;
+    text-align: center;
+    font-size: 18;
+  }

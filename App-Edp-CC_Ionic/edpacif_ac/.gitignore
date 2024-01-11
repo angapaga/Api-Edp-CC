@@ -12,6 +12,9 @@ $RECYCLE.BIN/
 *.log
 log.txt
 
+*.zip
+*.rar
+
 
 /.sourcemaps
 /.versions
