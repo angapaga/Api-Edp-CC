@@ -1,0 +1,32 @@
+.frm{
+    padding: 2rem;
+}
+
+ion-input{
+    margin-bottom: 1rem ;
+}
+
+ion-button{
+    height: 3.2rem;
+}
+
+ion-toolbar{
+    text-align: center;
+}
+img{
+    margin-bottom: 4rem;
+}
+
+ion-content{
+    --background: white;
+}
+
+ion-input{
+    // Cambia el color del label
+  --color: black;
+
+  // Cambia el color del placeholder
+  ::placeholder {
+    color: green;
+  }
+}

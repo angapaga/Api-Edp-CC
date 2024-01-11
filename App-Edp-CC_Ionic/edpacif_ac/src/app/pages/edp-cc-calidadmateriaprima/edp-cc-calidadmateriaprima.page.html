@@ -1,0 +1,33 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button (click)="regresar()" defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Calidad en Materia Prima</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">calidadmateriaprima</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="center">
+    <ion-card *ngFor="let item of menuItems">
+    
+      <ion-card-header routerLink="/{{ item.urllink }}">
+        <ion-card-title>{{item.titulo}}</ion-card-title>
+        <!-- <ion-card-subtitle>Card Subtitle</ion-card-subtitle> -->
+      </ion-card-header>
+      <!-- <ion-card-content>
+        hola
+      </ion-card-content> -->
+    </ion-card>
+  </div>
+
+</ion-content>
+
+<!-- <ion-content [fullscreen]="true">
+</ion-content> -->
