@@ -1,0 +1,695 @@
+<?php
+/// Solo Se habilita las 2 lineas de errores si la api no responde para probrar
+// ini_set('display_errors', 1);
+// error_reporting(E_ALL);
+$code = 500;
+$message = 'NO';
+
+///Funcion que devuelve lista de paneles de sabores por anio y estado
+function Lista_Cabecera_Paneles_Sabores_Por_Estado($p_db, $p_empresa, $p_sucursal, $p_anio, $p_estado, $p_empleado){
+
+    try {
+        $query    = $p_db->prepare("  SELECT distinct (edpkpscp.kpscp_cod_kpscp) cod_panel ,   
+                                                    (edpkpscp.cccre_cod_cccre) cod_cali,   
+                                                trim(edpkpscp.clote_cod_clote) lote_cali, 
+                                                trim(saecccre.cccre_docu_cccre) docu_cali, 
+                                                trim(saecccre.cccre_seri_cccre) serie_cali, 
+                                                trim(edpkpsap.kpsap_cod_panel )   cod_analista, 
+                                                ( SELECT trim (saeusua.usua_nom_corto ) 
+                                                        FROM saeusua  
+                                                        WHERE ( saeusua.usua_cod_empl = '$p_empleado' ) AND  
+                                                                ( saeusua.usua_cod_sucu = $p_sucursal )  ) analista,
+                                                CASE edpkpscp.kpscp_est_kpscp 
+                                                    WHEN 'PE' THEN 'PENDIENTE'
+                                                    WHEN 'PR' THEN 'PROCESADO'
+                                                    WHEN 'CE' THEN 'CERRADO'
+                                                    WHEN 'AN' THEN 'ANULADO'
+                                                END AS estado
+                                            FROM edpkpscp,     
+                                                saecccre,
+                                                edpkpsap
+                                            WHERE ( edpkpscp.kpscp_cod_kpscp = edpkpsap.kpscp_cod_kpscp ) and  
+                                                ( edpkpscp.empr_cod_empr = edpkpsap.empr_cod_empr ) and  
+                                                ( edpkpscp.sucu_cod_sucu = edpkpsap.sucu_cod_sucu )  and 
+                                                ( edpkpscp.cccre_cod_cccre = saecccre.cccre_cod_cccre ) and  
+                                                ( edpkpscp.empr_cod_empr = saecccre.empr_cod_empr ) and  
+                                                ( edpkpscp.sucu_cod_sucu = saecccre.sucu_cod_sucu ) and 
+                                                ( edpkpscp.empr_cod_empr = $p_empresa) and
+                                                ( edpkpscp.sucu_cod_sucu = $p_sucursal) and
+                                                ( edpkpscp.kpscp_est_kpscp = '$p_estado' ) and 
+                                                ( year(edpkpscp.kpscp_fes_crea) = $p_anio) and 
+                                                ( trim(edpkpsap.kpsap_cod_panel) = '$p_empleado') and
+                                                ( edpkpscp.kpscp_est_kpscp <> 'AN' ) and
+                                                ( edpkpsap.kpsap_est_kpsap <> 'AN' )   ");
+        $query->execute();
+
+        //// Asigna los Items de la consulta a un array
+        //$result =  $query->fetchAll(PDO::FETCH_ASSOC);
+        while($row = $query->fetch(PDO::FETCH_NUM)){
+            $result[] = array(
+                   'cod_panel'   =>  $row[0],
+                   'cod_cali' => $row[1], 
+                   'lote_cali' => mb_convert_encoding($row[2], 'UTF-8', 'ISO-8859-15'),
+                   'docu_cali' => $row[3], 
+                   'serie_cali' => $row[4],
+                   'cod_analista' => $row[5],
+                   'analista' => mb_convert_encoding($row[6], 'UTF-8', 'ISO-8859-15'),
+                   'estado' => mb_convert_encoding($row[7], 'UTF-8', 'ISO-8859-15'),
+                );
+        }
+        
+        ////Si la consulta no devuelve datos devuelve mensaje
+        if (empty($result))
+        {
+            $code = 204;
+            $message = 'NO';
+            $result = 'No hay datos';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+
+        ////Caso contrario devuelve el array con los valores
+        }else{
+            $code = 200;
+            $message = 'SI';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        
+        $code = 204;
+        $message = 'NO';
+        $result=$e->getMessage();
+        return   json_encode([
+            'code' => $code,
+            'message' => $message,
+            'result' => $result,
+    ]);
+    }
+}
+//// Fin funcion Lista_Cabecera_Paneles_Sabores_Por_Estado
+
+///Funcion que devuelve lista de paneles de sabores por anio e id_cabecera
+function Lista_Cabecera_Paneles_Sabores_Por_IdCabecera($p_db, $p_empresa, $p_sucursal, $p_anio, $p_cabecera, $p_empleado){
+
+    try {
+        $query    = $p_db->prepare("  SELECT distinct (edpkpscp.kpscp_cod_kpscp) cod_panel ,   
+                                                    (edpkpscp.cccre_cod_cccre) cod_cali,   
+                                                trim(edpkpscp.clote_cod_clote) lote_cali, 
+                                                trim(saecccre.cccre_docu_cccre) docu_cali, 
+                                                trim(saecccre.cccre_seri_cccre) serie_cali, 
+                                                trim(edpkpsap.kpsap_cod_panel )   cod_analista, 
+                                                ( SELECT trim (saeusua.usua_nom_corto ) 
+                                                        FROM saeusua  
+                                                        WHERE ( saeusua.usua_cod_empl = '$p_empleado' ) AND  
+                                                                ( saeusua.usua_cod_sucu = $p_sucursal )  ) analista,
+                                                CASE edpkpscp.kpscp_est_kpscp 
+                                                    WHEN 'PE' THEN 'PENDIENTE'
+                                                    WHEN 'PR' THEN 'PROCESADO'
+                                                    WHEN 'CE' THEN 'CERRADO'
+                                                    WHEN 'AN' THEN 'ANULADO'
+                                                END AS estado
+                                            FROM edpkpscp,     
+                                                saecccre,
+                                                edpkpsap
+                                            WHERE ( edpkpscp.kpscp_cod_kpscp = edpkpsap.kpscp_cod_kpscp ) and  
+                                                ( edpkpscp.empr_cod_empr = edpkpsap.empr_cod_empr ) and  
+                                                ( edpkpscp.sucu_cod_sucu = edpkpsap.sucu_cod_sucu )  and 
+                                                ( edpkpscp.cccre_cod_cccre = saecccre.cccre_cod_cccre ) and  
+                                                ( edpkpscp.empr_cod_empr = saecccre.empr_cod_empr ) and  
+                                                ( edpkpscp.sucu_cod_sucu = saecccre.sucu_cod_sucu ) and 
+                                                ( edpkpscp.kpscp_cod_kpscp = $p_cabecera ) and 
+                                                ( edpkpscp.empr_cod_empr = $p_empresa) and
+                                                ( edpkpscp.sucu_cod_sucu = $p_sucursal) and
+                                                ( year(edpkpscp.kpscp_fes_crea) = $p_anio) and 
+                                                ( trim(edpkpsap.kpsap_cod_panel) = '$p_empleado') and
+                                                ( edpkpscp.kpscp_est_kpscp <> 'AN' ) and
+                                                ( edpkpsap.kpsap_est_kpsap <> 'AN' )   ");
+        $query->execute();
+
+        //// Asigna los Items de la consulta a un array
+        ///$result =  $query->fetchAll(PDO::FETCH_ASSOC);
+        while($row = $query->fetch(PDO::FETCH_NUM)){
+            $result[] = array(
+                   'cod_panel'   =>  $row[0],
+                   'cod_cali' => $row[1], 
+                   'lote_cali' => mb_convert_encoding($row[2], 'UTF-8', 'ISO-8859-15'),
+                   'docu_cali' => $row[3], 
+                   'serie_cali' => $row[4],
+                   'cod_analista' => $row[5],
+                   'analista' => mb_convert_encoding($row[6], 'UTF-8', 'ISO-8859-15'),
+                   'estado' => mb_convert_encoding($row[7], 'UTF-8', 'ISO-8859-15'),
+                );
+        }
+        
+        ////Si la consulta no devuelve datos devuelve mensaje
+        if (empty($result))
+        {
+            $code = 204;
+            $message = 'NO';
+            $result = 'No hay datos';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+
+        ////Caso contrario devuelve el array con los valores
+        }else{
+            $code = 200;
+            $message = 'SI';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        
+        $code = 204;
+        $message = 'NO';
+        $result=$e->getMessage();
+        return   json_encode([
+            'code' => $code,
+            'message' => $message,
+            'result' => $result,
+    ]);
+    }
+}
+//// Fin funcion Lista_Cabecera_Paneles_Sabores_Por_IdCabecera
+
+//// Funcion que devuelve lista de remuestreo de analisis fisico por anio y estado 
+function Lista_Cabecera_Remuestreo_Fisico_Por_Estado($p_db, $p_empresa, $p_sucursal, $p_anio, $p_estado, $p_empleado){
+
+    try {
+        $query    = $p_db->prepare("  SELECT distinct (edpkecrf.kecrf_cod_kecrf) cod_panel ,   
+                                                            (edpkecrf.cccre_cod_cccre) cod_cali,   
+                                                        trim(saecccre.clote_cod_clote) lote_cali, 
+                                                        trim(saecccre.cccre_docu_cccre) docu_cali, 
+                                                        trim(saecccre.cccre_seri_cccre) serie_cali, 
+                                                        trim(edpkearf.kearf_cod_panel )   cod_analista, 
+                                                        ( SELECT trim (saeusua.usua_nom_corto ) 
+                                                        FROM saeusua  
+                                                        WHERE ( saeusua.usua_cod_empl = '$p_empleado' ) AND  
+                                                                ( saeusua.usua_cod_sucu = $p_sucursal )  ) analista,
+                                                        CASE edpkecrf.kecrf_est_kecrf 
+                                                            WHEN 'PE' THEN 'PENDIENTE'
+                                                            WHEN 'PR' THEN 'PROCESADO'
+                                                            WHEN 'CE' THEN 'CERRADO'
+                                                            WHEN 'AN' THEN 'ANULADO'
+                                                        END AS estado
+                                                    FROM edpkecrf,     
+                                                        saecccre,
+                                                        edpkearf
+                                                    WHERE ( edpkecrf.kecrf_cod_kecrf = edpkearf.kecrf_cod_kecrf ) and  
+                                                        ( edpkecrf.empr_cod_empr = edpkearf.empr_cod_empr ) and  
+                                                        ( edpkecrf.sucu_cod_sucu = edpkearf.sucu_cod_sucu )  and 
+                                                        ( edpkecrf.cccre_cod_cccre = saecccre.cccre_cod_cccre ) and  
+                                                        ( edpkecrf.empr_cod_empr = saecccre.empr_cod_empr ) and  
+                                                        ( edpkecrf.sucu_cod_sucu = saecccre.sucu_cod_sucu ) and 
+                                                        ( edpkecrf.empr_cod_empr = $p_empresa) and
+                                                        ( edpkecrf.sucu_cod_sucu = $p_sucursal) and
+                                                        ( edpkecrf.kecrf_est_kecrf = '$p_estado' ) and 
+                                                        ( year(edpkecrf.kecrf_fes_crea) = $p_anio) and 
+                                                        ( trim(edpkearf.kearf_cod_panel) = '$p_empleado') and
+                                                        ( edpkecrf.kecrf_est_kecrf <> 'AN' ) and
+                                                        ( edpkearf.kearf_est_kearf <> 'AN' )    ");
+        $query->execute();
+
+        //// Asigna los Items de la consulta a un array
+        //$result =  $query->fetchAll(PDO::FETCH_ASSOC);
+        while($row = $query->fetch(PDO::FETCH_NUM)){
+            $result[] = array(
+                   'cod_panel'   =>  $row[0],
+                   'cod_cali' => $row[1], 
+                   'lote_cali' => mb_convert_encoding($row[2], 'UTF-8', 'ISO-8859-15'),
+                   'docu_cali' => $row[3], 
+                   'serie_cali' => $row[4],
+                   'cod_analista' => $row[5],
+                   'analista' => mb_convert_encoding($row[6], 'UTF-8', 'ISO-8859-15'),
+                   'estado' => mb_convert_encoding($row[7], 'UTF-8', 'ISO-8859-15'),
+                );
+        }
+        
+        ////Si la consulta no devuelve datos devuelve mensaje
+        if (empty($result))
+        {
+            $code = 204;
+            $message = 'NO';
+            $result = 'No hay datos';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+
+        ////Caso contrario devuelve el array con los valores
+        }else{
+            $code = 200;
+            $message = 'SI';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        
+        $code = 204;
+        $message = 'NO';
+        $result=$e->getMessage();
+        return   json_encode([
+            'code' => $code,
+            'message' => $message,
+            'result' => $result,
+    ]);
+    }
+}
+/// Fin Funcion de remuestreo de analisis fisico
+
+//// Funcion que devuelve lista de remuestreo de analisis fisico por anio e id_cabecera 
+function Lista_Cabecera_Remuestreo_Fisico_Por_IdCabecera ($p_db, $p_empresa, $p_sucursal, $p_anio, $p_cabecera, $p_empleado){
+
+    try {
+        $query    = $p_db->prepare("  SELECT distinct (edpkecrf.kecrf_cod_kecrf) cod_panel ,   
+                                                            (edpkecrf.cccre_cod_cccre) cod_cali,   
+                                                        trim(saecccre.clote_cod_clote) lote_cali, 
+                                                        trim(saecccre.cccre_docu_cccre) docu_cali, 
+                                                        trim(saecccre.cccre_seri_cccre) serie_cali, 
+                                                        trim(edpkearf.kearf_cod_panel )   cod_analista, 
+                                                        ( SELECT trim (saeusua.usua_nom_corto ) 
+                                                        FROM saeusua  
+                                                        WHERE ( saeusua.usua_cod_empl = '$p_empleado' ) AND  
+                                                                ( saeusua.usua_cod_sucu = $p_sucursal )  ) analista,
+                                                        CASE edpkecrf.kecrf_est_kecrf 
+                                                            WHEN 'PE' THEN 'PENDIENTE'
+                                                            WHEN 'PR' THEN 'PROCESADO'
+                                                            WHEN 'CE' THEN 'CERRADO'
+                                                            WHEN 'AN' THEN 'ANULADO'
+                                                        END AS estado
+                                                    FROM edpkecrf,     
+                                                        saecccre,
+                                                        edpkearf
+                                                    WHERE ( edpkecrf.kecrf_cod_kecrf = edpkearf.kecrf_cod_kecrf ) and  
+                                                        ( edpkecrf.empr_cod_empr = edpkearf.empr_cod_empr ) and  
+                                                        ( edpkecrf.sucu_cod_sucu = edpkearf.sucu_cod_sucu )  and 
+                                                        ( edpkecrf.cccre_cod_cccre = saecccre.cccre_cod_cccre ) and  
+                                                        ( edpkecrf.empr_cod_empr = saecccre.empr_cod_empr ) and  
+                                                        ( edpkecrf.sucu_cod_sucu = saecccre.sucu_cod_sucu ) and 
+                                                        ( edpkecrf.empr_cod_empr = $p_empresa) and
+                                                        ( edpkecrf.sucu_cod_sucu = $p_sucursal) and
+                                                        ( edpkecrf.kecrf_cod_kecrf = '$p_cabecera' ) and 
+                                                        ( year(edpkecrf.kecrf_fes_crea) = $p_anio) and 
+                                                        ( trim(edpkearf.kearf_cod_panel) = '$p_empleado') and
+                                                        ( edpkecrf.kecrf_est_kecrf <> 'AN' ) and
+                                                        ( edpkearf.kearf_est_kearf <> 'AN' )    ");
+        $query->execute();
+
+        //// Asigna los Items de la consulta a un array
+        ////$result =  $query->fetchAll(PDO::FETCH_ASSOC);
+        while($row = $query->fetch(PDO::FETCH_NUM)){
+            $result[] = array(
+                   'cod_panel'   =>  $row[0],
+                   'cod_cali' => $row[1], 
+                   'lote_cali' => mb_convert_encoding($row[2], 'UTF-8', 'ISO-8859-15'),
+                   'docu_cali' => $row[3], 
+                   'serie_cali' => $row[4],
+                   'cod_analista' => $row[5],
+                   'analista' => mb_convert_encoding($row[6], 'UTF-8', 'ISO-8859-15'),
+                   'estado' => mb_convert_encoding($row[7], 'UTF-8', 'ISO-8859-15'),
+                );
+        }
+        
+        ////Si la consulta no devuelve datos devuelve mensaje
+        if (empty($result))
+        {
+            $code = 204;
+            $message = 'NO';
+            $result = 'No hay datos';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+
+        ////Caso contrario devuelve el array con los valores
+        }else{
+            $code = 200;
+            $message = 'SI';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        
+        $code = 204;
+        $message = 'NO';
+        $result=$e->getMessage();
+        return   json_encode([
+            'code' => $code,
+            'message' => $message,
+            'result' => $result,
+    ]);
+    }
+}
+/// Fin Funcion de remuestreo de analisis fisico
+
+//// Funcion que devuelve lista de remuestreo de cabezas cargadas por anio y estado 
+function Lista_Cabecera_Remuestreo_Cabezas_Por_Estado($p_db, $p_empresa, $p_sucursal, $p_anio, $p_estado, $p_empleado){
+
+    try {
+        $query    = $p_db->prepare("  SELECT distinct (edpkecrc.kecrc_cod_kecrc) cod_panel ,   
+                                                            (edpkecrc.cccre_cod_cccre) cod_cali,   
+                                                        trim(saecccre.clote_cod_clote) lote_cali, 
+                                                        trim(saecccre.cccre_docu_cccre) docu_cali, 
+                                                        trim(saecccre.cccre_seri_cccre) serie_cali, 
+                                                        trim(edpkearc.kearc_cod_panel )   cod_analista, 
+                                                        ( SELECT trim (saeusua.usua_nom_corto ) 
+                                                        FROM saeusua  
+                                                        WHERE ( saeusua.usua_cod_empl = '$p_empleado' ) AND  
+                                                                ( saeusua.usua_cod_sucu = $p_sucursal )  ) analista,
+                                                        CASE edpkecrc.kecrc_est_kecrc 
+                                                            WHEN 'PE' THEN 'PENDIENTE'
+                                                            WHEN 'PR' THEN 'PROCESADO'
+                                                            WHEN 'CE' THEN 'CERRADO'
+                                                            WHEN 'AN' THEN 'ANULADO'
+                                                        END AS estado
+                                                    FROM edpkecrc,     
+                                                        saecccre,
+                                                        edpkearc
+                                                    WHERE ( edpkecrc.kecrc_cod_kecrc = edpkearc.kecrc_cod_kecrc ) and  
+                                                        ( edpkecrc.empr_cod_empr = edpkearc.empr_cod_empr ) and  
+                                                        ( edpkecrc.sucu_cod_sucu = edpkearc.sucu_cod_sucu )  and 
+                                                        ( edpkecrc.cccre_cod_cccre = saecccre.cccre_cod_cccre ) and  
+                                                        ( edpkecrc.empr_cod_empr = saecccre.empr_cod_empr ) and  
+                                                        ( edpkecrc.sucu_cod_sucu = saecccre.sucu_cod_sucu ) and 
+                                                        ( edpkecrc.empr_cod_empr = $p_empresa) and
+                                                        ( edpkecrc.sucu_cod_sucu = $p_sucursal) and
+                                                        ( edpkecrc.kecrc_est_kecrc = '$p_estado' ) and 
+                                                        ( year(edpkecrc.kecrc_fes_crea) = $p_anio) and 
+                                                        ( trim(edpkearc.kearc_cod_panel) = '$p_empleado') and
+                                                        ( edpkecrc.kecrc_est_kecrc <> 'AN' ) and
+                                                        ( edpkearc.kearc_est_kearc <> 'AN' ) ;    ");
+        $query->execute();
+
+        //// Asigna los Items de la consulta a un array
+        //$result =  $query->fetchAll(PDO::FETCH_ASSOC);
+        while($row = $query->fetch(PDO::FETCH_NUM)){
+            $result[] = array(
+                   'cod_panel'   =>  $row[0],
+                   'cod_cali' => $row[1], 
+                   'lote_cali' => mb_convert_encoding($row[2], 'UTF-8', 'ISO-8859-15'),
+                   'docu_cali' => $row[3], 
+                   'serie_cali' => $row[4],
+                   'cod_analista' => $row[5],
+                   'analista' => mb_convert_encoding($row[6], 'UTF-8', 'ISO-8859-15'),
+                   'estado' => mb_convert_encoding($row[7], 'UTF-8', 'ISO-8859-15'),
+                );
+        }
+        
+        ////Si la consulta no devuelve datos devuelve mensaje
+        if (empty($result))
+        {
+            $code = 204;
+            $message = 'NO';
+            $result = 'No hay datos';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+
+        ////Caso contrario devuelve el array con los valores
+        }else{
+            $code = 200;
+            $message = 'SI';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        
+        $code = 204;
+        $message = 'NO';
+        $result=$e->getMessage();
+        return   json_encode([
+            'code' => $code,
+            'message' => $message,
+            'result' => $result,
+    ]);
+    }
+}
+/// Fin Funcion de remuestreo  de cabezas cargadas 
+
+//// Funcion que devuelve lista de remuestreo de cabezas cargadas por anio e id_cabecera 
+function Lista_Cabecera_Remuestreo_Cabezas_Por_IdCabecera($p_db, $p_empresa, $p_sucursal, $p_anio, $p_cabecera, $p_empleado){
+
+    try {
+        $query    = $p_db->prepare("  SELECT distinct (edpkecrc.kecrc_cod_kecrc) cod_panel ,   
+                                                            (edpkecrc.cccre_cod_cccre) cod_cali,   
+                                                        trim(saecccre.clote_cod_clote) lote_cali, 
+                                                        trim(saecccre.cccre_docu_cccre) docu_cali, 
+                                                        trim(saecccre.cccre_seri_cccre) serie_cali, 
+                                                        trim(edpkearc.kearc_cod_panel )   cod_analista, 
+                                                        ( SELECT trim (saeusua.usua_nom_corto ) 
+                                                        FROM saeusua  
+                                                        WHERE ( saeusua.usua_cod_empl = '$p_empleado' ) AND  
+                                                                ( saeusua.usua_cod_sucu = $p_sucursal )  ) analista,
+                                                        CASE edpkecrc.kecrc_est_kecrc 
+                                                            WHEN 'PE' THEN 'PENDIENTE'
+                                                            WHEN 'PR' THEN 'PROCESADO'
+                                                            WHEN 'CE' THEN 'CERRADO'
+                                                            WHEN 'AN' THEN 'ANULADO'
+                                                        END AS estado
+                                                    FROM edpkecrc,     
+                                                        saecccre,
+                                                        edpkearc
+                                                    WHERE ( edpkecrc.kecrc_cod_kecrc = edpkearc.kecrc_cod_kecrc ) and  
+                                                        ( edpkecrc.empr_cod_empr = edpkearc.empr_cod_empr ) and  
+                                                        ( edpkecrc.sucu_cod_sucu = edpkearc.sucu_cod_sucu )  and 
+                                                        ( edpkecrc.cccre_cod_cccre = saecccre.cccre_cod_cccre ) and  
+                                                        ( edpkecrc.empr_cod_empr = saecccre.empr_cod_empr ) and  
+                                                        ( edpkecrc.sucu_cod_sucu = saecccre.sucu_cod_sucu ) and 
+                                                        ( edpkecrc.empr_cod_empr = $p_empresa) and
+                                                        ( edpkecrc.sucu_cod_sucu = $p_sucursal) and
+                                                        ( edpkecrc.kecrc_cod_kecrc = $p_cabecera ) and 
+                                                        ( year(edpkecrc.kecrc_fes_crea) = $p_anio) and 
+                                                        ( trim(edpkearc.kearc_cod_panel) = '$p_empleado') and
+                                                        ( edpkecrc.kecrc_est_kecrc <> 'AN' ) and
+                                                        ( edpkearc.kearc_est_kearc <> 'AN' ) ;    ");
+        $query->execute();
+
+        //// Asigna los Items de la consulta a un array
+       // $result =  $query->fetchAll(PDO::FETCH_ASSOC);
+       while($row = $query->fetch(PDO::FETCH_NUM)){
+        $result[] = array(
+               'cod_panel'   =>  $row[0],
+               'cod_cali' => $row[1], 
+               'lote_cali' => mb_convert_encoding($row[2], 'UTF-8', 'ISO-8859-15'),
+               'docu_cali' => $row[3], 
+               'serie_cali' => $row[4],
+               'cod_analista' => $row[5],
+               'analista' => mb_convert_encoding($row[6], 'UTF-8', 'ISO-8859-15'),
+               'estado' => mb_convert_encoding($row[7], 'UTF-8', 'ISO-8859-15'),
+            );
+        } 
+        ////Si la consulta no devuelve datos devuelve mensaje
+        if (empty($result))
+        {
+            $code = 204;
+            $message = 'NO';
+            $result = 'No hay datos';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+
+        ////Caso contrario devuelve el array con los valores
+        }else{
+            $code = 200;
+            $message = 'SI';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        
+        $code = 204;
+        $message = 'NO';
+        $result=$e->getMessage();
+        return   json_encode([
+            'code' => $code,
+            'message' => $message,
+            'result' => $result,
+    ]);
+    }
+}
+/// Fin Funcion de remuestreo  de cabezas cargadas 
+
+
+///// Lista de empleados por cedula
+function Lista_Empleados_Por_Cedula($p_db, $p_empresa, $p_sucursal, $p_empleado){
+
+    try {
+        $query    = $p_db->prepare("  SELECT trim(saeempl.empl_cod_empl) cedula,
+                                            trim(saeempl.empl_ape_nomb ) apellidos_nombres, 
+                                            trim(saeempl.empl_nom_empl ) || ' ' ||  trim(saeempl.empl_ape_empl ) nombres_apellidos,
+                                            trim(saeempl.empl_nom_empl ) nombres, 
+                                            trim(saeempl.empl_ape_empl ) apellidos
+                                            FROM saeempl  
+                                            WHERE ( saeempl.empl_cod_empl = '$p_empleado' ) AND  
+                                            ( saeempl.empl_cod_empr = $p_empresa )   ");
+        $query->execute();
+
+        //// Asigna los Items de la consulta a un array
+        //$result =  $query->fetchAll(PDO::FETCH_ASSOC);
+        while($row = $query->fetch(PDO::FETCH_NUM)){
+
+            $result[] = array(
+                   'cedula'   =>  $row[0],
+                   'apellidos_nombres' => mb_convert_encoding($row[1], 'UTF-8', 'ISO-8859-15'),
+                   'nombres_apellidos' => mb_convert_encoding($row[2], 'UTF-8', 'ISO-8859-15'),
+                   'nombres' => mb_convert_encoding($row[3], 'UTF-8', 'ISO-8859-15'),
+                   'apellidos' => mb_convert_encoding($row[4], 'UTF-8', 'ISO-8859-15'),
+        
+                );
+            }
+
+
+        
+        ////Si la consulta no devuelve datos devuelve mensaje
+        if (empty($result))
+        {
+            $code = 204;
+            $message = 'NO';
+            $result = 'No hay datos';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+
+        ////Caso contrario devuelve el array con los valores
+        }else{
+            $code = 200;
+            $message = 'SI';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        
+        $code = 204;
+        $message = 'NO';
+        $result=$e->getMessage();
+        return   json_encode([
+            'code' => $code,
+            'message' => $message,
+            'result' => $result,
+    ]);
+    }
+}
+/////Fin lista empleados por cedula 
+
+///// Lista de usuarios por cedula
+function Lista_Usuarios_Por_Cedula($p_db, $p_empresa, $p_sucursal, $p_empleado){
+
+    try {
+        $query    = $p_db->prepare("   SELECT saeusua.usua_cod_usua,   
+                                             trim(saeusua.usua_nom_usua),
+                                            trim(saeusua.usua_nom_corto) ,
+                                            trim(saeusua.usua_pas_usua)
+                                        FROM saeusua  
+                                        WHERE ( saeusua.usua_cod_empl = '$p_empleado' ) AND  
+                                                ( saeusua.usua_cod_sucu = $p_sucursal )   ");
+        $query->execute();
+
+        //// Asigna los Items de la consulta a un array
+        //$result =  $query->fetchAll(PDO::FETCH_ASSOC);
+        while($row = $query->fetch(PDO::FETCH_NUM)){
+            $var =  desc_pass($row[3]);
+            $result[] = array(
+                   'codigo'   =>  $row[0],
+                   'nombre' => mb_convert_encoding($row[1], 'UTF-8', 'ISO-8859-15'),
+                   'nombre_corto' => mb_convert_encoding($row[2], 'UTF-8', 'ISO-8859-15'),
+                   'enc' => mb_convert_encoding($row[3], 'UTF-8', 'ISO-8859-15'),
+                   'desc' => $var,
+                );
+        }
+
+
+        
+        ////Si la consulta no devuelve datos devuelve mensaje
+        if (empty($result))
+        {
+            $code = 204;
+            $message = 'NO';
+            $result = 'No hay datos';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+
+        ////Caso contrario devuelve el array con los valores
+        }else{
+            $code = 200;
+            $message = 'SI';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        
+        $code = 204;
+        $message = 'NO';
+        $result=$e->getMessage();
+        return   json_encode([
+            'code' => $code,
+            'message' => $message,
+            'result' => $result,
+    ]);
+    }
+}
+/////Fin lista usuarios por cedula 
+?>

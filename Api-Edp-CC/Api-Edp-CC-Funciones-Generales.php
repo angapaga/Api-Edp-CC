@@ -111,7 +111,6 @@ function fg_select_dos_periodos($db, $empresa, $sucursal, $fecha, $hora){
     return $result;
 }
 
- 
 
 function fg_fecha_fija($db, $empresa){
     
@@ -138,6 +137,25 @@ function fg_fecha_fija($db, $empresa){
         }
         //return array('s', '01/05/2022', '01/05/2022');
         return array($estado, $fecha_fija, $fecha_inv);
+ }
+
+
+ function desc_pass($password){
+    //$password = $postjson['password'];
+
+   $a_origen = $password;
+   $vls_str2	 = 'z!ng*q1xs)2d(3vfr4bwt5$hy6+j|7ki8lo9@p0Z}#XS?\=R>GT;H<MJ:K]L,%P';//'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890/';
+   $vls_str1 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890/';//'z!ng*q1xs)2d(3vfr4bwt5$hy6+j|7ki8lo9@p0Z}#XS?\=R>GT;H<MJ:K]L,%P';
+   $vls_result = "";
+   for ($j=0; $j< strlen($a_origen); $j++){
+      
+      $vls_char = substr($a_origen,$j,1);
+      //encriptar
+      $vls_result .= substr($vls_str1, strpos($vls_str2, $vls_char), 1);
+      
+    }
+    $password = trim($vls_result);
+    return  $password ;
  }
 
 

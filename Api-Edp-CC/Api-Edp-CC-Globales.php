@@ -25,7 +25,7 @@ $cod_usua = $postjson['cod_usua'];
 // }
 
 
-$gl_anio = intval(date('Y', strtotime($gd_today)));
+$gl_anio = 2023;//intval(date('Y', strtotime($gd_today)));
 
 
 ///Hora actual del Sistema hora del server de API
