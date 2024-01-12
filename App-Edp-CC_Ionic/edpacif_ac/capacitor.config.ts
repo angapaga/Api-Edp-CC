@@ -2,10 +2,11 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
-  appName: 'edpacif_ac',
+  appName: 'edpacif Aseg CC',
   webDir: 'www',
   server: {
-    androidScheme: 'https'
+    androidScheme: 'http',
+    cleartext: true
   }
 };
 

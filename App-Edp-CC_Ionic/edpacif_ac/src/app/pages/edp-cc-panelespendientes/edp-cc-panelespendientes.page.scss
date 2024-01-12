@@ -7,7 +7,16 @@
 }
 
 
+ion-col {
+  background-color: #c9d5d4;
+  border: solid 1px #010101;
+  color: #000000;
+  text-align: center;
+  
+}
+
 ion-grid {
+    --ion-grid-border-radius: 20px;
     --ion-grid-padding: auto;
   
     --ion-grid-padding-xs: auto;
@@ -23,6 +32,7 @@ ion-grid {
     --ion-grid-column-padding-md: auto;
     --ion-grid-column-padding-lg: auto;
     --ion-grid-column-padding-xl: auto;
+    
   }
 
   .cabecera{

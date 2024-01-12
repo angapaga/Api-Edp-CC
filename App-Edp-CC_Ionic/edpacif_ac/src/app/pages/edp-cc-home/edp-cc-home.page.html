@@ -1,6 +1,8 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Home</ion-title>
+<ion-header >
+  <ion-toolbar color="primary">
+    <img style="zoom: 0.5;" src="/assets/img/Edp.png" slot="start">
+    <ion-button (click)="logout()" slot="end" color="warning"><ion-icon  name="log-out"></ion-icon></ion-button>
+    <ion-title style="font-size: 30px; text-align: center;" ><h2>Menu Principal</h2></ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -15,8 +17,8 @@
   <div class="center">
     <ion-card *ngFor="let item of menuItems">
     
-      <ion-card-header routerLink="/{{ item.urllink }}">
-        <ion-card-title>{{item.titulo}}</ion-card-title>
+      <ion-card-header routerLink="/{{ item.urllink }}" color="medium">
+        <ion-card-title >{{item.titulo}}</ion-card-title>
         <!-- <ion-card-subtitle>Card Subtitle</ion-card-subtitle> -->
       </ion-card-header>
       <!-- <ion-card-content>
@@ -26,6 +28,8 @@
   </div>
 
 </ion-content>
-
-<!-- <ion-content [fullscreen]="true">
-</ion-content> -->
+<ion-footer >
+  <ion-toolbar color="light">
+    <ion-title class="ion-text-center">Edpacif S.A.</ion-title>
+  </ion-toolbar>
+</ion-footer>

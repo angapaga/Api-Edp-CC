@@ -10,22 +10,12 @@ export class PostService {
 
   constructor(private httpClient: HttpClient) {}
 
-//   postData(body, file): Observable<any>{
-//     let type = 'application/json; charset=utf-8';
-//     //let headers = new HttpHeaders({ 'Content-Type': type });
-//     let headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
-//     //let options = new HttpRequestOptions({ headers: headers });
-
-//     return this.httpClient.post(this.server + file, JSON.stringify(body), headers)
-//     .pipe(
-//     map(res => res));
-// }
-
   postData(body:any, file:any): Observable<any> {
     const url = this.server + file;
     let headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
-
-    return this.httpClient.post(url, JSON.stringify(body), { headers })
+    const options = { headers, useUntrusted: true };
+//console.log(url);
+    return this.httpClient.post(url, JSON.stringify(body),  options)
             .pipe(map((res: any) => res));
   }
 }

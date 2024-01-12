@@ -15,6 +15,8 @@ import { Router } from "@angular/router";
 export class EdpCcPanelespendientesPage implements OnInit {
 
   lista_pe:any;
+  contar :any;
+  total :any;
 
   constructor(private navCtrl: NavController, 
               private toastController: ToastController,
@@ -76,13 +78,15 @@ mostrar_pe() {
     this.postPvdr.postData(body, 'Api-Edp-CC-Aseg-Calidad.php').subscribe(
       (data: any) => {
 
-        console.log(data.result[0]);
-
+        //console.log(data.result[0]);
+        this.contar=0;
         if (data.code == 200) {
           for (let get_lista of data.result) {
             this.lista_pe.push(get_lista);
+            this.contar = this.contar +1;
           }
           resolve(this.lista_pe);
+          this.total = this.lista_pe.length;
         } else {
           this.toast_ok(data.result,'danger', 'middle')
           //this.presentAlert('', data.result); // Puedes enviar el mensaje de error como argumento a reject
@@ -99,5 +103,11 @@ editar_doc(cabecera:any){
   this.storage.set('cabecera', cabecera);
   this.router.navigate(['/editar-doc-rc']);
 }
+
+onButtonClick(item: any) {
+  // Lógica para manejar el clic en el botón para el elemento específico.
+  console.log('Botón clic en:', item);
+}
+
 
 }

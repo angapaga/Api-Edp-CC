@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
+import { Storage } from "@ionic/storage";
 
 @Component({
   selector: 'app-edp-cc-start',
@@ -8,13 +9,15 @@ import { NavController } from '@ionic/angular';
 })
 export class EdpCcStartPage implements OnInit {
 
-  constructor(private navCtrl: NavController) {}
+  constructor(private navCtrl: NavController,
+              private storage: Storage,) {}
 
   ngOnInit() {
+    this.storage.create();
     setTimeout(() => {
       // Utiliza el método navigateForward del NavController para ir a la siguiente vista
       this.navCtrl.navigateForward('/edp-cc-login');
-    }, 1000); // 5000 milisegundos = 5 segundos
+    }, 1500); // 5000 milisegundos = 5 segundos
   }
 
 }

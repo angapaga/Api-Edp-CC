@@ -3,11 +3,18 @@
   "integrations": {
     "capacitor": {}
   },
-  "proxies": [
-    {
-      "path": "/api",
-      "proxyUrl": "http://192.168.0.201/Api-Edp-CC/Api-Edp-CC-Aseg-Calidad.php"
+  "server": {
+    "cleartext": true,
+    "allowNavigation": ["*"]
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
     }
-  ],
+  },
+  "android": {
+    "allowMixedContent": true
+  },
+
   "type": "angular"
 }
