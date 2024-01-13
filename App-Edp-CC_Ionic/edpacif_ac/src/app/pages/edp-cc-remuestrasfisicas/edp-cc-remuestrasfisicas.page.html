@@ -1,0 +1,71 @@
+<ion-header >
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button (click)="regresar()" defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <!-- <img style="zoom: 0.5;" src="assets/img/logo.jpg" slot="start" [routerLink]="['/menu-doc-rc']"> -->
+    <ion-title style="font-size: 30px; text-align: center;" ><h2>REMUESTRAS FÍSICAS</h2></ion-title>
+    <!-- <ion-title slot="end">{{nom_usua}}</ion-title> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true"> 
+  <form>    
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Datos de Cabecera</ion-card-title>
+      <ion-card-subtitle>
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list >
+        <ion-item color="medium">
+          <ion-label size="2">Doc.</ion-label>
+          <ion-label size="6">Analista</ion-label>
+          <ion-label size="2">Calidad</ion-label>
+          <ion-label size="2">Muestras</ion-label>
+        </ion-item>
+        <!--  -->
+        <ion-item *ngFor="let get_lista of lista_pe" >
+          <ion-label size="6"> {{get_lista.cod_panel}}</ion-label> 
+          <ion-label size="2">{{get_lista.analista}}</ion-label>
+          <ion-label size="2" >{{get_lista.docu_cali}} - {{get_lista.serie_cali}}</ion-label>          
+          <ion-label size="2" ><ion-input label="." name="muestras" [(ngModel)]="muestras" placeholder="Ingresa muestras"></ion-input> </ion-label>
+          
+        </ion-item>
+  
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</form>
+
+<form>    
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Datos de Detalles</ion-card-title>
+      <ion-card-subtitle>
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list >
+        <ion-item color="medium">
+          <ion-label size="6">Defecto</ion-label>
+          <ion-label size="6">Cantidad</ion-label>
+        </ion-item>
+        <!--  -->
+        <ion-item *ngFor="let get_listad of lista_detalles_pr" >
+          <ion-label size="6">{{get_listad.defe}}</ion-label>  
+          <ion-label size="6"><ion-input label="." name="cantidad" value="get_listad.cantidad" [(ngModel)]="cantidad" placeholder="Ingresa cantidad"></ion-input></ion-label> 
+        </ion-item>
+  
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</form>
+</ion-content>
+
+<ion-footer >
+  <ion-toolbar color="light">
+    <ion-title class="ion-text-center">Edpacif S.A.</ion-title>
+  </ion-toolbar>
+</ion-footer>

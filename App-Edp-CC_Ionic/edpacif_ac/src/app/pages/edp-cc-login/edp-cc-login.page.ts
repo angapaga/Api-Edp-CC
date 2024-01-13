@@ -42,7 +42,7 @@ export class EdpCcLoginPage implements OnInit {
      });
      this.username ='';
      this.password= '';
-     //this.get_periodo();
+     this.get_dos_periodos();
  
    }
  
@@ -51,33 +51,48 @@ export class EdpCcLoginPage implements OnInit {
      this.password= '';
    }
 
-   get_periodo() {
-    this.periods=[];
-    return new Promise(resolve => {
-      let body = {
-        api: 'get_periodos'
-      };
-
-
-      this.postPvdr.postData(body, 'api_clasificadora.php').subscribe(data => {
-        if(data.success){
-        for (let period of data.result) {
-          this.periods.push(period);
-          
-        }
-        resolve(true);
-        
-       }
-      }); 
+   async toast_ok(msg:any,color:any, position:any){
+  
+      const toast = await this.toastController.create({
+      message: msg,
+      duration: 3000,
+      color : color,
+      position: position
     });
+      toast.present();
   }
 
+  get_dos_periodos() {
+    return new Promise((resolve, reject) => {
+      this.periods = null;
+      this.periods = [];
+  
+      let body = {
+        peticion: "Dos_periodos_activos"
+      };
+  
+      this.postPvdr.postData(body, 'Api-Edp-CC-Aseg-Calidad.php').subscribe(
+        (data: any) => {
+
+          if (data.code == 200) {
+            for (let period of data.result) {
+              this.periods.push(period);
+            }
+            resolve(this.periods);
+          } else {
+            this.toast_ok(data.result,'danger', 'top')
+            //this.presentAlert('', data.result); // Puedes enviar el mensaje de error como argumento a reject
+          }
+        },
+        (error) => {
+          reject("Error en la solicitud HTTP"); // Manejo de errores de la solicitud HTTP
+        }
+      );
+    });
+  }
  
 
   login(){
-    //his.navCtrl.navigateForward('/edp-cc-home');
-
-
     return new Promise((resolve, reject) => {
       this.lista = null;
       this.lista = [];
@@ -98,37 +113,18 @@ export class EdpCcLoginPage implements OnInit {
             }
             resolve(this.lista);
             this.storage.set('session_storage', data.result);
-            //this.storage.set('periodo', this.periodo_prod);
+            this.storage.set('periodo', this.periodo_prod);
 
             this.router.navigate(['/edp-cc-home']);
-            const toast = await this.toastController.create({
-              message: 'Bienvenido!',
-              duration: 3000,
-              color: 'success',
-              position:'top'
+            this.toast_ok('Bienvenido!!!','success', 'top');
 
-
-            });
-            toast.present();
           } else {
-            const toast = await this.toastController.create({
-              message: data.message,
-              duration: 3000,
-              color:'danger',
-              position: 'top'
-            });
-            toast.present();
+            this.toast_ok(data.message,'danger', 'top');
             //this.presentAlert('', data.result); // Puedes enviar el mensaje de error como argumento a reject
           }
         },
         async (error) => {
-          const toast = await this.toastController.create({
-            message: 'Algo salió mal',
-            duration: 3000,
-            color:'danger',
-            position: 'top'
-          });
-          toast.present();
+          this.toast_ok('Algo Salió Mal!!!','danger', 'top');
           
           this.username ='';
           this.password= '';

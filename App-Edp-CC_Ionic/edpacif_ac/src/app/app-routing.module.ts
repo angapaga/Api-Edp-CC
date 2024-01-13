@@ -39,6 +39,30 @@ const routes: Routes = [
     path: 'edp-cc-inicio',
     loadChildren: () => import('./edp-cc-inicio/edp-cc-inicio.module').then( m => m.EdpCcInicioPageModule)
   },
+  {
+    path: 'edp-cc-remuestrafisicapendientes',
+    loadChildren: () => import('./pages/edp-cc-remuestrafisicapendientes/edp-cc-remuestrafisicapendientes.module').then( m => m.EdpCcRemuestrafisicapendientesPageModule)
+  },
+  {
+    path: 'edp-cc-menuremuestrasfisicas',
+    loadChildren: () => import('./pages/edp-cc-menuremuestrasfisicas/edp-cc-menuremuestrasfisicas.module').then( m => m.EdpCcMenuremuestrasfisicasPageModule)
+  },
+  {
+    path: 'edp-cc-remuestrasfisicas',
+    loadChildren: () => import('./pages/edp-cc-remuestrasfisicas/edp-cc-remuestrasfisicas.module').then( m => m.EdpCcRemuestrasfisicasPageModule)
+  },
+  {
+    path: 'edp-cc-menucabezascargadas',
+    loadChildren: () => import('./pages/edp-cc-menucabezascargadas/edp-cc-menucabezascargadas.module').then( m => m.EdpCcMenucabezascargadasPageModule)
+  },
+  {
+    path: 'edp-cc-cabezascargadaspendientes',
+    loadChildren: () => import('./pages/edp-cc-cabezascargadaspendientes/edp-cc-cabezascargadaspendientes.module').then( m => m.EdpCcCabezascargadaspendientesPageModule)
+  },
+  {
+    path: 'edp-cc-cabezascargadas',
+    loadChildren: () => import('./pages/edp-cc-cabezascargadas/edp-cc-cabezascargadas.module').then( m => m.EdpCcCabezascargadasPageModule)
+  }
 
 ];
 

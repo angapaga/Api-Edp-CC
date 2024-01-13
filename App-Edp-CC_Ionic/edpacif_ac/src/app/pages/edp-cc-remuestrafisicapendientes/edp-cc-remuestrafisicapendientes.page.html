@@ -4,13 +4,13 @@
       <ion-back-button (click)="regresar()" defaultHref="/"></ion-back-button>
     </ion-buttons>
     <!-- <img style="zoom: 0.5;" src="assets/img/logo.jpg" slot="start" [routerLink]="['/menu-doc-rc']"> -->
-    <ion-title style="font-size: 30px; text-align: center;" ><h2>Panel de Sabores</h2></ion-title>
+    <ion-title style="font-size: 30px; text-align: center;" ><h2>REMUESTRAS FÍSICAS</h2></ion-title>
     <!-- <ion-title slot="end">{{nom_usua}}</ion-title> -->
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true"> 
-       
+  <form>    
   <ion-card>
     <ion-card-header>
       <ion-card-title>Documentos Pendientes</ion-card-title>
@@ -39,7 +39,7 @@
           <ion-label size="5"> {{get_lista.cod_panel}}</ion-label> 
           <ion-label size="5">{{get_lista.analista}}</ion-label>
           <ion-label size="1" class="ion-text-right">
-            <ion-button (click)="onButtonClick(1)">
+            <ion-button (click)="muestras(get_lista.cod_panel)">
               <ion-icon name="add-circle"></ion-icon>
             </ion-button>
           </ion-label>
@@ -48,7 +48,7 @@
       </ion-list>
     </ion-card-content>
   </ion-card>
-  
+</form>
 </ion-content>
 
 <ion-footer >

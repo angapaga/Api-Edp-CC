@@ -62,8 +62,7 @@ function Lista_Cabecera_Paneles_Sabores_Por_Estado($p_db, $p_empresa, $p_sucursa
         if (empty($result))
         {
             $code = 204;
-            $message = 'NO';
-            $result = 'No hay datos';
+            $message = 'No hay datos';
     
             return  json_encode([
                     'code' => $code,
@@ -86,8 +85,7 @@ function Lista_Cabecera_Paneles_Sabores_Por_Estado($p_db, $p_empresa, $p_sucursa
     } catch (PDOException $e) {
         
         $code = 204;
-        $message = 'NO';
-        $result=$e->getMessage();
+        $message =$e->getMessage();
         return   json_encode([
             'code' => $code,
             'message' => $message,
@@ -154,8 +152,7 @@ function Lista_Cabecera_Paneles_Sabores_Por_IdCabecera($p_db, $p_empresa, $p_suc
         if (empty($result))
         {
             $code = 204;
-            $message = 'NO';
-            $result = 'No hay datos';
+            $message = 'No hay datos';
     
             return  json_encode([
                     'code' => $code,
@@ -178,8 +175,7 @@ function Lista_Cabecera_Paneles_Sabores_Por_IdCabecera($p_db, $p_empresa, $p_suc
     } catch (PDOException $e) {
         
         $code = 204;
-        $message = 'NO';
-        $result=$e->getMessage();
+        $message =$e->getMessage();
         return   json_encode([
             'code' => $code,
             'message' => $message,
@@ -246,8 +242,7 @@ function Lista_Cabecera_Remuestreo_Fisico_Por_Estado($p_db, $p_empresa, $p_sucur
         if (empty($result))
         {
             $code = 204;
-            $message = 'NO';
-            $result = 'No hay datos';
+            $message =  'No hay datos';
     
             return  json_encode([
                     'code' => $code,
@@ -270,8 +265,7 @@ function Lista_Cabecera_Remuestreo_Fisico_Por_Estado($p_db, $p_empresa, $p_sucur
     } catch (PDOException $e) {
         
         $code = 204;
-        $message = 'NO';
-        $result=$e->getMessage();
+        $message = $e->getMessage();
         return   json_encode([
             'code' => $code,
             'message' => $message,
@@ -338,8 +332,7 @@ function Lista_Cabecera_Remuestreo_Fisico_Por_IdCabecera ($p_db, $p_empresa, $p_
         if (empty($result))
         {
             $code = 204;
-            $message = 'NO';
-            $result = 'No hay datos';
+            $message =  'No hay datos';
     
             return  json_encode([
                     'code' => $code,
@@ -362,8 +355,7 @@ function Lista_Cabecera_Remuestreo_Fisico_Por_IdCabecera ($p_db, $p_empresa, $p_
     } catch (PDOException $e) {
         
         $code = 204;
-        $message = 'NO';
-        $result=$e->getMessage();
+        $message =$e->getMessage();
         return   json_encode([
             'code' => $code,
             'message' => $message,
@@ -372,6 +364,82 @@ function Lista_Cabecera_Remuestreo_Fisico_Por_IdCabecera ($p_db, $p_empresa, $p_
     }
 }
 /// Fin Funcion de remuestreo de analisis fisico
+
+//// Funcion que devuelve lista de remuestreo de analisis fisico por anio e id_cabecera 
+function Lista_Detalles_Remuestreo_Fisico_Por_IdCabecera ($p_db, $p_cabecera, $p_empresa, $p_sucursal){
+
+    try {
+        $query    = $p_db->prepare("    SELECT edpkedrf.kedrf_cod_kedrf cod_detalle,   
+                                        edpkedrf.kecrf_cod_kecrf cod_cabecera,   
+                                        edpkedrf.kearf_cod_kearf cod_asignacion,   
+                                        edpkedrf.cdefe_cod_cdefe cod_defe, 
+                                        saecdefe.cdefe_desc_cdefe defe,  
+                                        edpkedrf.kedrf_can_kedrf cantidad,   
+                                        edpkedrf.kedrf_mue_kedrf muestras,   
+                                        edpkedrf.kedrf_por_kedrf porcentaje   
+                                          
+                                FROM edpkedrf,   
+                                        saecdefe  
+                                WHERE ( edpkedrf.empr_cod_empr = saecdefe.empr_cod_empr ) and  
+                                        ( edpkedrf.sucu_cod_sucu = saecdefe.sucu_cod_sucu ) and  
+                                        ( edpkedrf.cdefe_cod_cdefe = saecdefe.cdefe_cod_cdefe ) and  
+                                        ( ( edpkedrf.kecrf_cod_kecrf = $p_cabecera ) AND  
+                                        ( edpkedrf.empr_cod_empr = $p_empresa ) AND  
+                                        ( edpkedrf.sucu_cod_sucu = $p_sucursal ) AND  
+                                        ( edpkedrf.kedrf_est_kedrf = 'PR' ) )     ");
+        $query->execute();
+
+        //// Asigna los Items de la consulta a un array
+        ////$result =  $query->fetchAll(PDO::FETCH_ASSOC);
+        while($row = $query->fetch(PDO::FETCH_NUM)){
+            $result[] = array(
+                   'cod_detalle'   =>  $row[0],
+                   'cod_cabecera' => $row[1], 
+                   'cod_asiganacion' =>  $row[2],  
+                   'cod_defe' => $row[3], 
+                   'defe' => mb_convert_encoding($row[4], 'UTF-8', 'ISO-8859-15'),
+                   'cantidad' => $row[5],
+                   'muestras' => $row[6],
+                   'porcentaje' => $row[7], 'UTF-8', 'ISO-8859-15',
+                );
+        }
+        
+        ////Si la consulta no devuelve datos devuelve mensaje
+        if (empty($result))
+        {
+            $code = 204;
+            $message = 'No hay datos';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+
+        ////Caso contrario devuelve el array con los valores
+        }else{
+            $code = 200;
+            $message = 'SI';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        
+        $code = 204;
+        $message = $e->getMessage();
+        return   json_encode([
+            'code' => $code,
+            'message' => $message,
+            'result' => $result,
+    ]);
+    }
+}
+/// Fin Funcion detalle remuestreo de analisis fisico
 
 //// Funcion que devuelve lista de remuestreo de cabezas cargadas por anio y estado 
 function Lista_Cabecera_Remuestreo_Cabezas_Por_Estado($p_db, $p_empresa, $p_sucursal, $p_anio, $p_estado, $p_empleado){
@@ -430,8 +498,7 @@ function Lista_Cabecera_Remuestreo_Cabezas_Por_Estado($p_db, $p_empresa, $p_sucu
         if (empty($result))
         {
             $code = 204;
-            $message = 'NO';
-            $result = 'No hay datos';
+            $message = 'No hay datos';
     
             return  json_encode([
                     'code' => $code,
@@ -454,8 +521,7 @@ function Lista_Cabecera_Remuestreo_Cabezas_Por_Estado($p_db, $p_empresa, $p_sucu
     } catch (PDOException $e) {
         
         $code = 204;
-        $message = 'NO';
-        $result=$e->getMessage();
+        $message =$e->getMessage();
         return   json_encode([
             'code' => $code,
             'message' => $message,
@@ -521,8 +587,7 @@ function Lista_Cabecera_Remuestreo_Cabezas_Por_IdCabecera($p_db, $p_empresa, $p_
         if (empty($result))
         {
             $code = 204;
-            $message = 'NO';
-            $result = 'No hay datos';
+            $message = 'No hay datos';
     
             return  json_encode([
                     'code' => $code,
@@ -545,8 +610,7 @@ function Lista_Cabecera_Remuestreo_Cabezas_Por_IdCabecera($p_db, $p_empresa, $p_
     } catch (PDOException $e) {
         
         $code = 204;
-        $message = 'NO';
-        $result=$e->getMessage();
+        $message = $e->getMessage();
         return   json_encode([
             'code' => $code,
             'message' => $message,
@@ -591,8 +655,7 @@ function Lista_Empleados_Por_Cedula($p_db, $p_empresa, $p_sucursal, $p_empleado)
         if (empty($result))
         {
             $code = 204;
-            $message = 'NO';
-            $result = 'No hay datos';
+            $message = 'No hay datos';
     
             return  json_encode([
                     'code' => $code,
@@ -615,8 +678,7 @@ function Lista_Empleados_Por_Cedula($p_db, $p_empresa, $p_sucursal, $p_empleado)
     } catch (PDOException $e) {
         
         $code = 204;
-        $message = 'NO';
-        $result=$e->getMessage();
+        $message = $e->getMessage();
         return   json_encode([
             'code' => $code,
             'message' => $message,
@@ -658,8 +720,7 @@ function Lista_Usuarios_Por_Cedula($p_db, $p_empresa, $p_sucursal, $p_empleado){
         if (empty($result))
         {
             $code = 204;
-            $message = 'NO';
-            $result = 'No hay datos';
+            $message =  'No hay datos';
     
             return  json_encode([
                     'code' => $code,
@@ -682,8 +743,7 @@ function Lista_Usuarios_Por_Cedula($p_db, $p_empresa, $p_sucursal, $p_empleado){
     } catch (PDOException $e) {
         
         $code = 204;
-        $message = 'NO';
-        $result=$e->getMessage();
+        $message =$e->getMessage();
         return   json_encode([
             'code' => $code,
             'message' => $message,
@@ -692,4 +752,224 @@ function Lista_Usuarios_Por_Cedula($p_db, $p_empresa, $p_sucursal, $p_empleado){
     }
 }
 /////Fin lista usuarios por cedula 
+
+
+///// Lista de defectos activos para bajar
+function Lista_Defectos_Activos_Bajar($p_db, $p_empresa, $p_sucursal){
+
+    try {
+        $query    = $p_db->prepare("  SELECT saecdefe.cdefe_cod_cdefe,   
+                                            saecdefe.cdefe_desc_cdefe,   
+                                            saecdefe.cdefe_min_cdefe,   
+                                            saecdefe.cdefe_acep_cdefe,   
+                                            saecdefe.cdefe_max_cdefe,   
+                                            saecdefe.cdefe_ord_cdefe  
+                                            FROM saecdefe  
+                                            WHERE ( saecdefe.empr_cod_empr = $p_empresa ) AND  
+                                            ( saecdefe.sucu_cod_sucu = $p_sucursal ) AND  
+                                            ( saecdefe.cdefe_esta_cdefe = 'A' ) AND  
+                                            ( saecdefe.cdefe_est_bajar = 'A' )     ");
+        $query->execute();
+
+        //// Asigna los Items de la consulta a un array
+        //$result =  $query->fetchAll(PDO::FETCH_ASSOC);
+        while($row = $query->fetch(PDO::FETCH_NUM)){
+            $var =  desc_pass($row[3]);
+            $result[] = array(
+                   'codigo'   =>  $row[0],
+                   'nombre' => $row[1],
+                   'min' => number_format($row[2], 2),
+                   'acep' => number_format($row[3], 2),
+                   'max' => number_format($row[4], 2),
+                   'orden' => $row[5],
+                );
+        }
+
+
+        
+        ////Si la consulta no devuelve datos devuelve mensaje
+        if (empty($result))
+        {
+            $code = 204;
+            $message =  'No hay datos';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+
+        ////Caso contrario devuelve el array con los valores
+        }else{
+            $code = 200;
+            $message = 'SI';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        
+        $code = 204;
+        $message =$e->getMessage();
+        return   json_encode([
+            'code' => $code,
+            'message' => $message,
+            'result' => $result,
+    ]);
+    }
+}
+/////Fin lista defectos activos para bajar 
+
+///// Lista de defectos activos para bajar
+function Lista_Defectos_Activos_Bajar_Por_Id($p_db, $p_empresa, $p_sucursal, $p_codigo){
+
+    try {
+        $query    = $p_db->prepare("  SELECT saecdefe.cdefe_cod_cdefe,   
+                                            saecdefe.cdefe_desc_cdefe,   
+                                            saecdefe.cdefe_min_cdefe,   
+                                            saecdefe.cdefe_acep_cdefe,   
+                                            saecdefe.cdefe_max_cdefe,   
+                                            saecdefe.cdefe_ord_cdefe  
+                                            FROM saecdefe  
+                                            WHERE (saecdefe.cdefe_cod_cdefe = $p_codigo) AND
+                                            ( saecdefe.empr_cod_empr = $p_empresa ) AND  
+                                            ( saecdefe.sucu_cod_sucu = $p_sucursal ) AND  
+                                            ( saecdefe.cdefe_esta_cdefe = 'A' ) AND  
+                                            ( saecdefe.cdefe_est_bajar = 'A' )     ");
+        $query->execute();
+
+        //// Asigna los Items de la consulta a un array
+        //$result =  $query->fetchAll(PDO::FETCH_ASSOC);
+        while($row = $query->fetch(PDO::FETCH_NUM)){
+            $var =  desc_pass($row[3]);
+            $result[] = array(
+                   'codigo'   =>  $row[0],
+                   'nombre' => $row[1],
+                   'min' => number_format($row[2], 2),
+                   'acep' => number_format($row[3], 2),
+                   'max' => number_format($row[4], 2),
+                   'orden' => $row[5],
+                );
+        }
+
+
+        
+        ////Si la consulta no devuelve datos devuelve mensaje
+        if (empty($result))
+        {
+            $code = 204;
+            $message =  'No hay datos';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+
+        ////Caso contrario devuelve el array con los valores
+        }else{
+            $code = 200;
+            $message = 'SI';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        
+        $code = 204;
+        $message =$e->getMessage();
+        return   json_encode([
+            'code' => $code,
+            'message' => $message,
+            'result' => $result,
+    ]);
+    }
+}
+/////Fin lista defectos activos para bajar por id
+
+///// Lista de defectos activos para bajar
+function Lista_Defectos_Activos_Bajar_No_Deta_Fisica($p_db, $p_empresa, $p_sucursal, $p_cabecera){
+
+    try {
+        $query    = $p_db->prepare("  SELECT saecdefe.cdefe_cod_cdefe,   
+                                            saecdefe.cdefe_desc_cdefe,   
+                                            saecdefe.cdefe_min_cdefe,   
+                                            saecdefe.cdefe_acep_cdefe,   
+                                            saecdefe.cdefe_max_cdefe,   
+                                            saecdefe.cdefe_ord_cdefe  
+                                            FROM saecdefe  
+                                            WHERE saecdefe.cdefe_cod_cdefe NOT IN (  SELECT edpkedrf.cdefe_cod_cdefe  
+                                                            FROM edpkedrf  
+                                                            WHERE ( edpkedrf.kecrf_cod_kecrf = $p_cabecera ) AND  
+                                                                ( edpkedrf.empr_cod_empr = $p_empresa ) AND  
+                                                                ( edpkedrf.sucu_cod_sucu = $p_sucursal ) AND  
+                                                                ( edpkedrf.kedrf_est_kedrf <> 'AN' )) AND
+                                            ( saecdefe.empr_cod_empr = $p_empresa ) AND  
+                                            ( saecdefe.sucu_cod_sucu = $p_sucursal ) AND  
+                                            ( saecdefe.cdefe_esta_cdefe = 'A' ) AND  
+                                            ( saecdefe.cdefe_est_bajar = 'A' )     ");
+        $query->execute();
+
+        //// Asigna los Items de la consulta a un array
+        //$result =  $query->fetchAll(PDO::FETCH_ASSOC);
+        while($row = $query->fetch(PDO::FETCH_NUM)){
+            $var =  desc_pass($row[3]);
+            $result[] = array(
+                   'codigo'   =>  $row[0],
+                   'nombre' => $row[1],
+                   'min' => number_format($row[2], 2),
+                   'acep' => number_format($row[3], 2),
+                   'max' => number_format($row[4], 2),
+                   'orden' => $row[5],
+                );
+        }
+
+
+        
+        ////Si la consulta no devuelve datos devuelve mensaje
+        if (empty($result))
+        {
+            $code = 204;
+            $message =  'No hay datos';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+
+        ////Caso contrario devuelve el array con los valores
+        }else{
+            $code = 200;
+            $message = 'SI';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        
+        $code = 204;
+        $message =$e->getMessage();
+        return   json_encode([
+            'code' => $code,
+            'message' => $message,
+            'result' => $result,
+    ]);
+    }
+}
+/////Fin lista defectos activos para bajar 
+
+  
 ?>

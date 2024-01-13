@@ -24,8 +24,8 @@ export class EdpCcCalidadmateriaprimaPage implements OnInit {
 
     this.menuItems = [
       new menuItem('Panel de sabor','','','edp-cc-panelsabor'),
-      new menuItem('Evaluación de cabezas cargadas','','','calidadproductoproceso'),
-      new menuItem('Evaluación de aspectos físicos','','','calidadproductoterminado'),
+      new menuItem('Evaluación de cabezas cargadas','','','edp-cc-menucabezascargadas'),
+      new menuItem('Evaluación de aspectos físicos','','','edp-cc-menuremuestrasfisicas'),
     ]
 
   }

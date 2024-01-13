@@ -14,17 +14,6 @@ $postjson = json_decode(file_get_contents('php://input'), true);
 
 $cod_usua = $postjson['cod_usua'];
 
-////Funcion de fecha Fija
-//$gs_estado_fecha = fg_fecha_fija($db, $gl_empresa)[0];
-// if ($gs_estado_fecha == null){
-    $gd_today = date('m/d/Y');
-// }else{
-//         $gd_today = date_create( fecha_fija($db, $gl_empresa)[1]);
-//         $gd_today = date_format($gd_today, 'm/d/Y');
-        
-// }
-
-
 $gl_anio = 2023;//intval(date('Y', strtotime($gd_today)));
 
 

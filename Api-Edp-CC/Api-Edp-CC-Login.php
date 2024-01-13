@@ -16,7 +16,7 @@ $passwordp = $postjson['pass'];
 $code = 500;
 $message = 'NO';
 
-function iniciar($db, $cod_usua, $passwordp, $conexion){ //quitar p
+function iniciar($db, $cod_usua, $passwordp, $conexion, $periodo){ //quitar p
   
    $a_origen = $password;
    $vls_str2	 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890/';
@@ -46,6 +46,17 @@ function iniciar($db, $cod_usua, $passwordp, $conexion){ //quitar p
                         'result' => $result,
                 ]);
           }else{
+            if ($periodo == '' or $periodo == null) 
+            {
+                  $code = 204;
+                  $message = 'Seleccione el Periodo Productivo';
+          
+                  return  json_encode([
+                          'code' => $code,
+                          'message' => $message,
+                          'result' => $result,
+                  ]);
+            }else{
             $query    = $db->prepare("SELECT usua_cod_usua, 
                                             trim(usua_nom_usua), 
                                             trim(usua_cod_empl), 
@@ -91,6 +102,7 @@ function iniciar($db, $cod_usua, $passwordp, $conexion){ //quitar p
                 ]);
             }
           }
+        }
         } catch (PDOException $e) {
      
             $code = 204;
@@ -118,7 +130,7 @@ function iniciar($db, $cod_usua, $passwordp, $conexion){ //quitar p
 if($postjson['peticion'] == "iniciar") {
   $passwordp = $postjson['pass'];
   $cod_usua = $postjson['cod_usua'];
-  echo iniciar($db, $cod_usua, $passwordp, $conexion); 
+  echo iniciar($db, $cod_usua, $passwordp, $conexion, $gs_aguaje); 
 }
 ?>
     
