@@ -187,7 +187,6 @@ function Lista_Cabecera_Paneles_Sabores_Por_IdCabecera($p_db, $p_empresa, $p_suc
 
 //// Funcion que devuelve lista de remuestreo de analisis fisico por anio y estado 
 function Lista_Cabecera_Remuestreo_Fisico_Por_Estado($p_db, $p_empresa, $p_sucursal, $p_anio, $p_estado, $p_empleado){
-
     try {
         $query    = $p_db->prepare("  SELECT distinct (edpkecrf.kecrf_cod_kecrf) cod_panel ,   
                                                             (edpkecrf.cccre_cod_cccre) cod_cali,   
@@ -204,7 +203,9 @@ function Lista_Cabecera_Remuestreo_Fisico_Por_Estado($p_db, $p_empresa, $p_sucur
                                                             WHEN 'PR' THEN 'PROCESADO'
                                                             WHEN 'CE' THEN 'CERRADO'
                                                             WHEN 'AN' THEN 'ANULADO'
-                                                        END AS estado
+                                                        END AS estado,
+                                                        (edpkearf.kearf_tot_muest) muestras,
+                                                        (edpkearf.kearf_cod_kearf) cod_asignacion
                                                     FROM edpkecrf,     
                                                         saecccre,
                                                         edpkearf
@@ -235,6 +236,8 @@ function Lista_Cabecera_Remuestreo_Fisico_Por_Estado($p_db, $p_empresa, $p_sucur
                    'cod_analista' => $row[5],
                    'analista' => mb_convert_encoding($row[6], 'UTF-8', 'ISO-8859-15'),
                    'estado' => mb_convert_encoding($row[7], 'UTF-8', 'ISO-8859-15'),
+                   'muestras' => $row[8],
+                   'cod_asignacion' => $row[9],
                 );
         }
         
@@ -294,7 +297,9 @@ function Lista_Cabecera_Remuestreo_Fisico_Por_IdCabecera ($p_db, $p_empresa, $p_
                                                             WHEN 'PR' THEN 'PROCESADO'
                                                             WHEN 'CE' THEN 'CERRADO'
                                                             WHEN 'AN' THEN 'ANULADO'
-                                                        END AS estado
+                                                        END AS estado,
+                                                        (edpkearf.kearf_tot_muest) muestras,
+                                                        (edpkearf.kearf_cod_kearf) cod_asignacion
                                                     FROM edpkecrf,     
                                                         saecccre,
                                                         edpkearf
@@ -325,6 +330,8 @@ function Lista_Cabecera_Remuestreo_Fisico_Por_IdCabecera ($p_db, $p_empresa, $p_
                    'cod_analista' => $row[5],
                    'analista' => mb_convert_encoding($row[6], 'UTF-8', 'ISO-8859-15'),
                    'estado' => mb_convert_encoding($row[7], 'UTF-8', 'ISO-8859-15'),
+                   'muestras' => $row[8],
+                   'cod_asignacion' => $row[9],
                 );
         }
         
@@ -400,7 +407,7 @@ function Lista_Detalles_Remuestreo_Fisico_Por_IdCabecera ($p_db, $p_cabecera, $p
                    'defe' => mb_convert_encoding($row[4], 'UTF-8', 'ISO-8859-15'),
                    'cantidad' => $row[5],
                    'muestras' => $row[6],
-                   'porcentaje' => $row[7], 'UTF-8', 'ISO-8859-15',
+                   'porcentaje' => $row[7],
                 );
         }
         
@@ -460,7 +467,8 @@ function Lista_Cabecera_Remuestreo_Cabezas_Por_Estado($p_db, $p_empresa, $p_sucu
                                                             WHEN 'PR' THEN 'PROCESADO'
                                                             WHEN 'CE' THEN 'CERRADO'
                                                             WHEN 'AN' THEN 'ANULADO'
-                                                        END AS estado
+                                                        END AS estado,
+                                                        (edpkearc.kearc_cod_kearc) cod_asignacion
                                                     FROM edpkecrc,     
                                                         saecccre,
                                                         edpkearc
@@ -491,6 +499,7 @@ function Lista_Cabecera_Remuestreo_Cabezas_Por_Estado($p_db, $p_empresa, $p_sucu
                    'cod_analista' => $row[5],
                    'analista' => mb_convert_encoding($row[6], 'UTF-8', 'ISO-8859-15'),
                    'estado' => mb_convert_encoding($row[7], 'UTF-8', 'ISO-8859-15'),
+                   'cod_asignacion' => $row[8],
                 );
         }
         
@@ -550,7 +559,8 @@ function Lista_Cabecera_Remuestreo_Cabezas_Por_IdCabecera($p_db, $p_empresa, $p_
                                                             WHEN 'PR' THEN 'PROCESADO'
                                                             WHEN 'CE' THEN 'CERRADO'
                                                             WHEN 'AN' THEN 'ANULADO'
-                                                        END AS estado
+                                                        END AS estado,
+                                                        (edpkearc.kearc_cod_kearc) cod_asignacion
                                                     FROM edpkecrc,     
                                                         saecccre,
                                                         edpkearc
@@ -581,6 +591,7 @@ function Lista_Cabecera_Remuestreo_Cabezas_Por_IdCabecera($p_db, $p_empresa, $p_
                'cod_analista' => $row[5],
                'analista' => mb_convert_encoding($row[6], 'UTF-8', 'ISO-8859-15'),
                'estado' => mb_convert_encoding($row[7], 'UTF-8', 'ISO-8859-15'),
+               'cod_asignacion' => $row[8],
             );
         } 
         ////Si la consulta no devuelve datos devuelve mensaje
@@ -620,6 +631,87 @@ function Lista_Cabecera_Remuestreo_Cabezas_Por_IdCabecera($p_db, $p_empresa, $p_
 }
 /// Fin Funcion de remuestreo  de cabezas cargadas 
 
+//// Funcion que devuelve lista de remuestreo de analisis fisico por anio e id_cabecera 
+function Lista_Detalles_Cabezas_Por_IdCabecera ($p_db, $p_cabecera, $p_empresa, $p_sucursal){
+
+    try {
+        $query    = $p_db->prepare("     SELECT distinct edpkedcc.kedcc_cod_kedcc,   
+                                                        edpkedcc.kecrc_cod_kecrc,   
+                                                        edpkedcc.cgana_cod_cgana,   
+                                                        (  SELECT saecgana.cgana_desc_cgana  
+                                                            FROM saecgana  
+                                                        WHERE ( saecgana.cgana_cod_cgana =  edpkedcc.cgana_cod_cgana ) AND  
+                                                                ( saecgana.empr_cod_empr =  edpkedcc.empr_cod_empr ) AND  
+                                                                ( saecgana.sucu_cod_sucu = edpkedcc.sucu_cod_sucu )  )  grupo,   
+                                                        edpkedcc.cana_cod_cana,   
+                                                        (SELECT saecana.cana_desc_cana  
+                                                            FROM saecana  
+                                                        WHERE ( saecana.cana_cod_cana = edpkedcc.cana_cod_cana ) AND  
+                                                                ( saecana.empr_cod_empr = edpkedcc.empr_cod_empr  ) AND  
+                                                                ( saecana.sucu_cod_sucu = edpkedcc.sucu_cod_sucu )  ) analisis ,   
+                                                        edpkedcc.kedcc_can_kedcc,   
+                                                        edpkedcc.kedcc_mue_kedcc,   
+                                                        edpkedcc.kedcc_por_kedcc  
+                                                FROM edpkedcc
+                                                WHERE
+                                                    ( edpkedcc.kecrc_cod_kecrc = $p_cabecera) and
+                                                    (edpkedcc.empr_cod_empr = $p_empresa) and
+                                                    (edpkedcc.sucu_cod_sucu = $p_sucursal)  and  
+                                                    (edpkedcc.kedcc_est_kedcc <> 'AN') ");
+        $query->execute();
+
+        //// Asigna los Items de la consulta a un array
+        ////$result =  $query->fetchAll(PDO::FETCH_ASSOC);
+        while($row = $query->fetch(PDO::FETCH_NUM)){
+            $result[] = array(
+                   'cod_detalle'   =>  $row[0],
+                   'cod_cabecera' => $row[1], 
+                   'cod_grupo' =>  $row[2],  
+                   'grupo' => mb_convert_encoding($row[3], 'UTF-8', 'ISO-8859-15'), 
+                   'cod_analisis' => $row[4],
+                   'analisis' => mb_convert_encoding($row[5], 'UTF-8', 'ISO-8859-15'),
+                   'cantidad' => $row[6],
+                   'muestras' => $row[7],
+                   'porcentaje' => $row[8],
+                );
+        }
+        
+        ////Si la consulta no devuelve datos devuelve mensaje
+        if (empty($result))
+        {
+            $code = 204;
+            $message = 'No hay datos';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+
+        ////Caso contrario devuelve el array con los valores
+        }else{
+            $code = 200;
+            $message = 'SI';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        
+        $code = 204;
+        $message = $e->getMessage();
+        return   json_encode([
+            'code' => $code,
+            'message' => $message,
+            'result' => $result,
+    ]);
+    }
+}
+/// Fin Funcion detalle remuestreo de analisis fisico
 
 ///// Lista de empleados por cedula
 function Lista_Empleados_Por_Cedula($p_db, $p_empresa, $p_sucursal, $p_empleado){

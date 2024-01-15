@@ -18,6 +18,11 @@ export class EdpCcCabezascargadaspendientesPage implements OnInit {
   lista_pe:any;
   contar :any;
   total :any;
+  sesion:any;
+  periodo:any;
+  cedula:any;
+  cod_usua:any;
+  username:any;
 
   constructor(private navCtrl: NavController, 
               private toastController: ToastController,
@@ -35,7 +40,18 @@ export class EdpCcCabezascargadaspendientesPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.mostrar_pe();
+    this.storage.create();
+    this.storage.get('session_storage').then((res) => {
+      this.sesion = res; 
+      this.storage.get('periodo').then((res) => {
+        this.periodo = res; 
+
+          this.cedula = this.sesion[0].usua_cod_empl;
+          this.cod_usua = this.sesion[0].cod_usua;
+          this.username = this.sesion[0].username; 
+          this.mostrar_pe();
+    });
+  });
   }
 
   async toast_ok(msg:any,color:any, position:any){
@@ -70,10 +86,10 @@ mostrar_pe() {
 
     let body = {
       peticion: "cabecera_remuestra_fisico_estado",
-      cod_usua: "45",
+      cod_usua: this.cod_usua,
       estado: "PE",
-      periodo: "01",
-      empleado:"1312992165"
+      periodo: this.periodo,
+      empleado: this.cedula
     };
 
     this.postPvdr.postData(body, 'Api-Edp-CC-Aseg-Calidad.php').subscribe(
@@ -89,7 +105,7 @@ mostrar_pe() {
           resolve(this.lista_pe);
           this.total = this.lista_pe.length;
         } else {
-          this.toast_ok(data.result,'danger', 'middle')
+          this.toast_ok(data.mensaje,'danger', 'middle')
           //this.presentAlert('', data.result); // Puedes enviar el mensaje de error como argumento a reject
         }
       },
@@ -100,14 +116,9 @@ mostrar_pe() {
   });
 }
 
-editar_doc(cabecera:any){
-  this.storage.set('cabecera', cabecera);
-  this.router.navigate(['/editar-doc-rc']);
-}
-
-onButtonClick(item: any) {
-  // Lógica para manejar el clic en el botón para el elemento específico.
-  console.log('Botón clic en:', item);
+muestras(cabecera:any){
+  this.storage.set('cabecera_cabezas', cabecera);
+  this.router.navigate(['/edp-cc-cabezascargadas']); 
 }
 
 

@@ -13,7 +13,17 @@
   <form>    
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Datos de Cabecera</ion-card-title>
+      <ion-row>
+        <ion-col size="10">
+          <ion-card-title>Datos de Cabecera</ion-card-title>
+        </ion-col>
+
+        <ion-col size="2">
+          <ion-button (click)="presentConfirm()" expand="block" color="success" >
+            <ion-icon name="checkmark-circle-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row> 
       <ion-card-subtitle>
       </ion-card-subtitle>
     </ion-card-header>
@@ -30,7 +40,7 @@
           <ion-label size="6"> {{get_lista.cod_panel}}</ion-label> 
           <ion-label size="2">{{get_lista.analista}}</ion-label>
           <ion-label size="2" >{{get_lista.docu_cali}} - {{get_lista.serie_cali}}</ion-label>          
-          <ion-label size="2" ><ion-input label="." name="muestras" [(ngModel)]="muestras" placeholder="Ingresa muestras"></ion-input> </ion-label>
+          <ion-label size="2" ><ion-input type="number" [disabled]="act_muestras" label="." name="muestras" [(ngModel)]="muestras" placeholder="Ingresa muestras" value="muestras"></ion-input> </ion-label>
           
         </ion-item>
   
@@ -42,8 +52,24 @@
 <form>    
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Datos de Detalles</ion-card-title>
+      <ion-card-title>Datos de Detalles
+      </ion-card-title>
       <ion-card-subtitle>
+        <ion-row>
+          <ion-col size="6">
+            <ion-select expand="block" size="6" ok-text="Aceptar Selección" cancel-text="Cerrar" placeholder="Seleccione Defecto" [(ngModel)]="defecto" [ngModelOptions]="{standalone: true}">
+              <ion-select-option *ngFor="let defec of defects" value="{{defec.codigo}}">{{defec.nombre}}</ion-select-option>     
+            </ion-select>
+          </ion-col> 
+          <ion-col size="3">
+            <ion-input type="number" label="." name="cantidad" [(ngModel)]="cantidad" placeholder="Ingrese Cantidad"></ion-input> 
+          </ion-col>
+          <ion-col size="3">
+            <ion-button (click)="add_detalle()" expand="block">
+              <ion-icon name="add-circle"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
       </ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
@@ -55,7 +81,7 @@
         <!--  -->
         <ion-item *ngFor="let get_listad of lista_detalles_pr" >
           <ion-label size="6">{{get_listad.defe}}</ion-label>  
-          <ion-label size="6"><ion-input label="." name="cantidad" value="get_listad.cantidad" [(ngModel)]="cantidad" placeholder="Ingresa cantidad"></ion-input></ion-label> 
+          <ion-label size="6">{{get_listad.cantidad}}</ion-label> 
         </ion-item>
   
       </ion-list>

@@ -11,8 +11,7 @@
     <img alt="Silhouette of mountains" src="/assets/img/Edpacif.png" />
     <ion-input label="Usuario" type="number" label-placement="floating" fill="outline" placeholder="Ingresa tú usuario" [(ngModel)]="username"></ion-input>
     <ion-input label="Clave" label-placement="floating" fill="outline" placeholder="Ingresa tú clave" type="password" [(ngModel)]="password"></ion-input>
-    <ion-label position="floating" size="6">Periodo Productivo</ion-label>
-    <ion-select size="6" ok-text="Aceptar Selección" cancel-text="Cerrar" placeholder="Seleccione Periodo Productivo" [(ngModel)]="periodo_prod" [ngModelOptions]="{standalone: true}">
+    <ion-select class="text-center" expand="block" size="6" ok-text="Aceptar Selección" cancel-text="Cerrar" placeholder="Seleccione Periodo Productivo" [(ngModel)]="periodo_prod" [ngModelOptions]="{standalone: true}">
       <ion-select-option *ngFor="let period of periods" value="{{period.periodo}}">{{period.periodo}}</ion-select-option>     
     </ion-select> 
 

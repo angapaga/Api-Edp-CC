@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { PostService } from '../../services/post.service';
 import { Storage } from '@ionic/storage';
- 
+  
 @Component({
   selector: 'app-edp-cc-menuremuestrasfisicas',
   templateUrl: './edp-cc-menuremuestrasfisicas.page.html',
@@ -23,8 +23,8 @@ export class EdpCcMenuremuestrasfisicasPage implements OnInit {
  
      this.menuItems = [
        // new menuItem('Calidad de Materia Prima','','','calidadmateriaprima'),
-       new menuItem('Remuestras Físicas','','','edp-cc-remuestrasfisicas'),
-       new menuItem('Consulta Remuestras Físicas Pendientes','','','edp-cc-remuestrafisicapendientes'),
+       //new menuItem('Remuestras Físicas','','','edp-cc-remuestrasfisicas'),
+       new menuItem('Remuestras Físicas Pendientes','','','edp-cc-remuestrafisicapendientes'),
      ]
  
    }

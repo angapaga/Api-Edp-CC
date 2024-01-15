@@ -76,6 +76,14 @@ if ($postjson['peticion'] == 'cabecera_remuestra_cabezas_cabecera')
 }
 /////// Fin petición Lista_Cabecera_Remuestreo_Cabezas_Por_IdCabecera
 
+//// Resolver peticion Lista_Detalles_Cabezas_Por_IdCabecera ($p_db, $p_cabecera, $p_empresa, $p_sucursal)
+if ($postjson['peticion'] == 'detalles_remuestra_cabezas_cabecera')
+{
+    $cabecera = $postjson['cabecera'] ;
+    echo Lista_Detalles_Cabezas_Por_IdCabecera ($db, $cabecera, $gl_empresa, $gl_sucursal);
+}
+/// Fin Lista_Detalles_Cabezas_Por_IdCabecera ($p_db, $p_cabecera, $p_empresa, $p_sucursal)
+
 /// Resolver peticion Lista_empleados_Por_Cedula($p_db, $p_empresa, $p_sucursal, $p_empleado)
 if ($postjson['peticion'] == 'empleados_cedula')
 {
@@ -132,5 +140,24 @@ if ($postjson['peticion'] == 'Periodos_anio')
     echo fg_select_periodos_anio($db, $gl_empresa, $gl_sucursal, $gd_today, $gd_hora);
 }
 ////Fin Peticion periodos anio
+
+///// Resolver Petición para actualizar muestras af Actualiza_Muestras_Remuestra_fisica($p_db, $p_empresa, $p_sucursal, $p_cabecera, $p_muestras, $p_usuario)
+if ($postjson['peticion'] == 'Actualiza_muestras_fisica')
+{
+    $cabecera = $postjson['cabecera'] ;
+    $muestras = $postjson['muestras'] ;
+    echo Actualiza_Muestras_Remuestra_fisica($db, $gl_empresa, $gl_sucursal, $cabecera, $muestras, $cod_usua);
+}
+//////Fin Peticion de actualizar muestras 
+
+
+//// Resolver peticion para actualizar estado de cabeceras fisica Procesa_Remuestra_fisica($p_db, $p_empresa, $p_sucursal, $p_cabecera, $p_usuario)
+if ($postjson['peticion'] == 'Procesa_muestras_fisica')
+{
+    $cabecera = $postjson['cabecera'] ;
+    echo Procesa_Remuestra_fisica($db, $gl_empresa, $gl_sucursal, $cabecera, $cod_usua);
+}
+/// Fin Procesa_Remuestra_fisica($p_db, $p_empresa, $p_sucursal, $p_cabecera, $p_usuario)
+
 
 ?>

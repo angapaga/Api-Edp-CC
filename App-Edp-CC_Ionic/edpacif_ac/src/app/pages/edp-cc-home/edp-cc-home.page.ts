@@ -25,8 +25,8 @@ export class EdpCcHomePage implements OnInit {
 
     this.menuItems = [
       new menuItem('Calidad de Materia Prima','','','edp-cc-calidadmateriaprima'),
-      new menuItem('Calidad de Producto en Proceso','','','calidadproductoproceso'),
-      new menuItem('Calidad de Producto Terminado','','','calidadproductoterminado'),
+      //new menuItem('Calidad de Producto en Proceso','','','calidadproductoproceso'),
+      //new menuItem('Calidad de Producto Terminado','','','calidadproductoterminado'),
     ]
 
   }

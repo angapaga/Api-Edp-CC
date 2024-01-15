@@ -24,8 +24,8 @@ export class EdpCcMenucabezascargadasPage implements OnInit {
  
      this.menuItems = [
        // new menuItem('Calidad de Materia Prima','','','calidadmateriaprima'),
-       new menuItem('Remuestras Cabezas Cargadas','','','edp-cc-cabezascargadas'),
-       new menuItem('Consulta Remuestras Cabezas Cargadas','','','edp-cc-cabezascargadaspendientes'),
+       //new menuItem('Remuestras Cabezas Cargadas','','','edp-cc-cabezascargadas'),
+       new menuItem('Remuestras Cabezas Cargadas','','','edp-cc-cabezascargadaspendientes'),
      ]
  
    }

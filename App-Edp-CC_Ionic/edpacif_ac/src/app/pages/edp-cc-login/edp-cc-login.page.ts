@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { PostService } from '../../services/post.service';
 import { Storage } from '@ionic/storage';
-
+import { DataService } from "../../services/data.service"; 
 
 @Component({
   selector: 'app-edp-cc-login',
@@ -29,10 +29,12 @@ export class EdpCcLoginPage implements OnInit {
      public toastController: ToastController,
      private postPvdr: PostService,
      private storage: Storage,
-     private navCtrl: NavController
+     private navCtrl: NavController,
+     private dataService: DataService
      ) { 
          
      }
+
  
    ngOnInit() {
     this.storage.create();
@@ -114,6 +116,7 @@ export class EdpCcLoginPage implements OnInit {
             resolve(this.lista);
             this.storage.set('session_storage', data.result);
             this.storage.set('periodo', this.periodo_prod);
+            //this.dataService.setPeriodo(this.periodo_prod);
 
             this.router.navigate(['/edp-cc-home']);
             this.toast_ok('Bienvenido!!!','success', 'top');
