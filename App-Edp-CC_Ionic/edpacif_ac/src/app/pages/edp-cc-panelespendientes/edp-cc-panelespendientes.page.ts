@@ -106,7 +106,7 @@ editar_doc(cabecera:any){
 
 onButtonClick(item: any) {
   // Lógica para manejar el clic en el botón para el elemento específico.
-  console.log('Botón clic en:', item);
+  this.toast_ok('Panel de sabores está en etapa de pruebas', 'danger','middle');
 }
 
 

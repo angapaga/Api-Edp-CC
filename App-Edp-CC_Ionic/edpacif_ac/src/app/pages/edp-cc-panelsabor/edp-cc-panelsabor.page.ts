@@ -24,8 +24,10 @@ export class EdpCcPanelsaborPage implements OnInit {
 
     this.menuItems = [
       // new menuItem('Calidad de Materia Prima','','','calidadmateriaprima'),
-      new menuItem('Consolidar Paneles','','','edp-cc-consolidadpaneles'),
-      new menuItem('Consulta de Paneles Pendientes','','','edp-cc-panelespendientes'),
+      new menuItem('Paneles Pendientes','','','edp-cc-panelespendientes'),
+      // new menuItem('Muestra Paneles','','','edp-cc-consolidadpaneles'),
+      // new menuItem('Consolidar Paneles','','','edp-cc-consolidadpaneles'),
+      
     ]
 
   }

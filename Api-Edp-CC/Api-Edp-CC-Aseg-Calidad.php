@@ -11,8 +11,8 @@ include "Api-Edp-CC-Funciones-Transac.php";
 //"cod_usua" : "",
 //"periodo": "", 
 
-//  ini_set('display_errors', 1);
-//  error_reporting(E_ALL);
+ ini_set('display_errors', 1);
+ error_reporting(E_ALL);
 
 /////// Resolver petición Lista_Cabecera_Paneles_Sabores_Por_Estado($p_db, $p_empresa, $p_sucursal, $p_anio, $p_estado, $p_empleado)
 if ($postjson['peticion'] == 'cabecera_panel_estado')
@@ -159,5 +159,30 @@ if ($postjson['peticion'] == 'Procesa_muestras_fisica')
 }
 /// Fin Procesa_Remuestra_fisica($p_db, $p_empresa, $p_sucursal, $p_cabecera, $p_usuario)
 
+//// Resolver peticion Lista_Analisis_Activos_Bajar_No_Deta_Cabezas($p_db, $p_empresa, $p_sucursal, $p_cabecera)
+if ($postjson['peticion'] == 'Analisis_Activos_Bajar')
+{
+    $cabecera = $postjson['cabecera'] ;
+    echo Lista_Analisis_Activos_Bajar_No_Deta_Cabezas($db, $gl_empresa, $gl_sucursal, $cabecera);
+}
+/// Fin Lista_Analisis_Activos_Bajar_No_Deta_Cabezas($p_db, $p_empresa, $p_sucursal, $p_cabecera)
+
+//// Resolver peticion para actualizar estado de cabeceras cabezas Procesa_Remuestra_cabezas($p_db, $p_empresa, $p_sucursal, $p_cabecera, $p_usuario)
+if ($postjson['peticion'] == 'Procesa_muestras_cabezas')
+{
+    $cabecera = $postjson['cabecera'] ;
+    echo Procesa_Remuestra_cabezas($db, $gl_empresa, $gl_sucursal, $cabecera, $cod_usua);
+}
+/// Fin Procesa_Remuestra_cabezas($p_db, $p_empresa, $p_sucursal, $p_cabecera, $p_usuario)
+
+//// Resolver peticion Insertar_detalles_Remuestra_cabezas($p_db, $p_empresa, $p_sucursal, $p_cabecera, $p_analisis, $p_cantidad, $p_usuario)
+if ($postjson['peticion'] == 'Insertar_detalles_cabezas')
+{
+    $cabecera = $postjson['cabecera'] ;
+    $analisis = $postjson['analisis'] ;
+    $cantidad = $postjson['cantidad'] ;
+    echo Insertar_detalles_Remuestra_cabezas($db, $gl_empresa, $gl_sucursal, $cabecera, $analisis, $cantidad, $cod_usua);
+}
+/// Fin Insertar_detalles_Remuestra_cabezas($p_db, $p_empresa, $p_sucursal, $p_cabecera, $p_analisis, $p_cantidad, $p_usuario)
 
 ?>

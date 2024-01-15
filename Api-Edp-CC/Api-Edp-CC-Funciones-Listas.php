@@ -1063,5 +1063,79 @@ function Lista_Defectos_Activos_Bajar_No_Deta_Fisica($p_db, $p_empresa, $p_sucur
 }
 /////Fin lista defectos activos para bajar 
 
+///// Lista de ANALISIS CABEZAS activos para bajar
+function Lista_Analisis_Activos_Bajar_No_Deta_Cabezas($p_db, $p_empresa, $p_sucursal, $p_cabecera){
+
+    try {
+        $query    = $p_db->prepare("  SELECT saecana.cana_cod_cana,   
+                                                saecana.cgana_cod_cgana,   
+                                                saecana.cana_desc_cana 
+
+                                        FROM saecana  
+                                        WHERE (saecana.cana_cod_cana not in (  SELECT  edpkedcc.cana_cod_cana
+                                        FROM edpkedcc
+                                        WHERE
+                                            ( edpkedcc.kecrc_cod_kecrc = $p_cabecera) and
+                                            (edpkedcc.empr_cod_empr = $p_empresa) and
+                                            (edpkedcc.sucu_cod_sucu = $p_sucursal) and
+                                            (edpkedcc.kedcc_est_kedcc <> 'AN') )) AND
+                                            ( saecana.cgana_cod_cgana = 4 ) AND  
+                                                ( saecana.empr_cod_empr = $p_empresa ) AND  
+                                                ( saecana.sucu_cod_sucu = $p_sucursal ) AND  
+                                                ( saecana.cana_esta_cana = 'A' ) AND  
+                                                ( saecana.cana_est_baja = 'A' )   
+                                        ORDER BY saecana.cana_ord_cana ASC      ");
+        $query->execute();
+
+        //// Asigna los Items de la consulta a un array
+        //$result =  $query->fetchAll(PDO::FETCH_ASSOC);
+        while($row = $query->fetch(PDO::FETCH_NUM)){
+            $result[] = array(
+                   'codigo'   =>  $row[0],
+                   'grupo' => $row[1],
+                   'nombre' => mb_convert_encoding($row[2], 'UTF-8', 'ISO-8859-15'),
+                );
+        }
+
+
+        
+        ////Si la consulta no devuelve datos devuelve mensaje
+        if (empty($result))
+        {
+            $code = 204;
+            $message =  'No hay datos';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+
+        ////Caso contrario devuelve el array con los valores
+        }else{
+            $code = 200;
+            $message = 'SI';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        
+        $code = 204;
+        $message =$e->getMessage();
+        return   json_encode([
+            'code' => $code,
+            'message' => $message,
+            'result' => $result,
+    ]);
+    }
+}
+/////Fin Lista de ANALISIS CABEZAS activos para bajar
+
+
   
 ?>

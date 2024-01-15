@@ -53,8 +53,8 @@ export class EdpCcCabezascargadasPage implements OnInit {
             this.cabecera = res; 
             this.mostrar_pe(this.cabecera);
             this.mostrar_detalles_pr(this.cabecera);
-            this.get_defects();
-          console.log(this.cabecera);
+            this.get_analisis();
+
           }); 
 
           this.cedula = this.sesion[0].usua_cod_empl;
@@ -148,7 +148,6 @@ mostrar_pe(cabecera:any) {
           for (let get_lista of data.result) {
             this.lista_pe.push(get_lista);
             this.contar = this.contar +1;
-            //console.log(this.lista_pe);
           }
           resolve(this.lista_pe);
           this.total = this.lista_pe.length;
@@ -203,13 +202,13 @@ mostrar_detalles_pr(cabecera:any) {
   });
 }
 
-get_defects() {
+get_analisis() {
   return new Promise((resolve, reject) => {
     this.defects = null;
     this.defects = [];
     //console.log(this.periodo);
     let body = {
-      peticion: "Defectos_Activos_Bajar_No_Deta",
+      peticion: "Analisis_Activos_Bajar",
       cabecera: this.cabecera,
       cod_usua: this.cod_usua,
       periodo: this.periodo,
@@ -244,13 +243,12 @@ add_detalle()
     this.defects = [];
     //console.log(this.periodo);
     let body = {
-      peticion: "Insertar_detalles_fisico",
+      peticion: "Insertar_detalles_cabezas",
       cabecera: this.cabecera,
       cod_usua: this.cod_usua,
       periodo: this.periodo,
-      defecto: this.defecto,
-      cantidad:this.cantidad,
-      muestras: this.muestras
+      analisis: this.defecto,
+      cantidad:this.cantidad
     };
 
     //console.log(this.muestras);
@@ -260,12 +258,12 @@ add_detalle()
 
         if (data.code == 200) {
           this.toast_ok(data.message,'success', 'top')
-          this.update_muestras();  
+
         } else {
           this.toast_ok(data.message,'danger', 'top')
         }
         
-        this.get_defects();
+        this.get_analisis();
         this.mostrar_detalles_pr(this.cabecera);
         this.mostrar_pe(this.cabecera);
         this.defecto=null;
@@ -279,37 +277,7 @@ add_detalle()
 
 }
 
-update_muestras()
-{
-  return new Promise((resolve, reject) => {
-    this.defects = null;
-    this.defects = [];
-    //console.log(this.periodo);
-    let body = {
-      peticion: "Actualiza_muestras_fisica",
-      cabecera: this.cod_asignacion,
-      cod_usua: this.cod_usua,
-      periodo: this.periodo,
-      muestras: this.muestras
-    };
 
-    this.postPvdr.postData(body, 'Api-Edp-CC-Aseg-Calidad.php').subscribe(
-      (data: any) => {
-
-        if (data.code == 200) {
-          this.toast_ok(data.message,'success', 'top')
-          
-        } else {
-          this.toast_ok(data.message,'danger', 'top')
-        }
-      },
-      (error) => {
-        reject("Error en la solicitud HTTP"); // Manejo de errores de la solicitud HTTP
-      }
-    );
-  });
-
-}
 
 process_doc()
 {
@@ -318,7 +286,7 @@ process_doc()
     this.defects = [];
     //console.log(this.periodo);
     let body = {
-      peticion: "Procesa_muestras_fisica",
+      peticion: "Procesa_muestras_cabezas",
       cabecera: this.cabecera,
       cod_usua: this.cod_usua,
       periodo: this.periodo
@@ -329,7 +297,7 @@ process_doc()
 
         if (data.code == 200) {
           this.toast_ok(data.message,'success', 'top')
-          this.router.navigate(['/edp-cc-remuestrafisicapendientes']); 
+          this.router.navigate(['/edp-cc-cabezascargadaspendientes']); 
           
         } else {
           this.toast_ok(data.message,'danger', 'top')

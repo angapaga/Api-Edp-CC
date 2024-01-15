@@ -85,7 +85,7 @@ mostrar_pe() {
     this.lista_pe = [];
 
     let body = {
-      peticion: "cabecera_remuestra_fisico_estado",
+      peticion: "cabecera_remuestra_cabezas_estado",
       cod_usua: this.cod_usua,
       estado: "PE",
       periodo: this.periodo,
@@ -105,7 +105,7 @@ mostrar_pe() {
           resolve(this.lista_pe);
           this.total = this.lista_pe.length;
         } else {
-          this.toast_ok(data.mensaje,'danger', 'middle')
+          this.toast_ok(data.message,'danger', 'middle')
           //this.presentAlert('', data.result); // Puedes enviar el mensaje de error como argumento a reject
         }
       },
