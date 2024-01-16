@@ -2,12 +2,10 @@
 /// Solo Se habilita las 2 lineas de errores si la api no responde para probrar
 // ini_set('display_errors', 1);
 // error_reporting(E_ALL);
-$code = 500;
-$message = 'NO';
 
 ///Funcion que devuelve lista de paneles de sabores por anio y estado
 function Lista_Cabecera_Paneles_Sabores_Por_Estado($p_db, $p_empresa, $p_sucursal, $p_anio, $p_estado, $p_empleado){
-
+    $result=[];
     try {
         $query    = $p_db->prepare("  SELECT distinct (edpkpscp.kpscp_cod_kpscp) cod_panel ,   
                                                     (edpkpscp.cccre_cod_cccre) cod_cali,   
@@ -97,7 +95,7 @@ function Lista_Cabecera_Paneles_Sabores_Por_Estado($p_db, $p_empresa, $p_sucursa
 
 ///Funcion que devuelve lista de paneles de sabores por anio e id_cabecera
 function Lista_Cabecera_Paneles_Sabores_Por_IdCabecera($p_db, $p_empresa, $p_sucursal, $p_anio, $p_cabecera, $p_empleado){
-
+    $result=[];
     try {
         $query    = $p_db->prepare("  SELECT distinct (edpkpscp.kpscp_cod_kpscp) cod_panel ,   
                                                     (edpkpscp.cccre_cod_cccre) cod_cali,   
@@ -185,8 +183,193 @@ function Lista_Cabecera_Paneles_Sabores_Por_IdCabecera($p_db, $p_empresa, $p_suc
 }
 //// Fin funcion Lista_Cabecera_Paneles_Sabores_Por_IdCabecera
 
+//// Funcion que devuelve lista de remuestreo de panel de sabores id_cabecera 
+function Lista_Detalles_Panel_Sabor_Por_IdCabecera ($p_db, $p_cabecera, $p_empresa, $p_sucursal, $p_empleado){
+    $result=[];
+    try {
+        $query    = $p_db->prepare("    SELECT edpkpspd.kpspd_cod_kpspd,   
+                                            edpkpspd.kpsni_cod_kpsni,   
+                                            trim(edpkpsni.kpsni_nom_kpsni),   
+                                            edpkpspd.cgana_cod_cgana,   
+                                            trim(saecgana.cgana_desc_cgana),   
+                                            edpkpspd.kpscp_cod_kpscp,   
+                                            edpkpspd.kpsap_cod_kpsap,   
+                                            edpkpspd.kpspd_mue_kpspd,   
+                                            edpkpspd.kpspd_can_kpspd,   
+                                            edpkpspd.kpspd_por_kpspd  
+                                            FROM edpkpspd,   
+                                            edpkpsni,   
+                                            saecgana,   
+                                            edpkpsap  
+                                            WHERE ( edpkpspd.empr_cod_empr = edpkpsni.empr_cod_empr ) and  
+                                            ( edpkpspd.sucu_cod_sucu = edpkpsni.sucu_cod_sucu ) and  
+                                            ( edpkpspd.kpsni_cod_kpsni = edpkpsni.kpsni_cod_kpsni ) and  
+                                            ( edpkpsni.empr_cod_empr = saecgana.empr_cod_empr ) and  
+                                            ( edpkpspd.sucu_cod_sucu = saecgana.sucu_cod_sucu ) and  
+                                            ( edpkpspd.cgana_cod_cgana = saecgana.cgana_cod_cgana ) and  
+                                            ( edpkpspd.empr_cod_empr = edpkpsap.empr_cod_empr ) and  
+                                            ( edpkpspd.sucu_cod_sucu = edpkpsap.sucu_cod_sucu ) and  
+                                            ( edpkpspd.kpsap_cod_kpsap = edpkpsap.kpsap_cod_kpsap ) and  
+                                            ( ( edpkpspd.empr_cod_empr = $p_empresa ) AND  
+                                            ( edpkpspd.sucu_cod_sucu = $p_sucursal ) AND  
+                                            ( edpkpspd.kpscp_cod_kpscp = $p_cabecera ) AND  
+                                            ( edpkpspd.kpspd_est_kpspd <> 'I' ) AND  
+                                            ( edpkpsap.kpsap_cod_panel = '$p_empleado' ) )    ");
+        $query->execute();
+
+        //// Asigna los Items de la consulta a un array
+        ////$result =  $query->fetchAll(PDO::FETCH_ASSOC);
+        while($row = $query->fetch(PDO::FETCH_NUM)){
+            $result[] = array(
+                   'cod_detalle'   =>  $row[0],
+                   'cod_nivel' => $row[1], 
+                   'nombre_nivel' =>  mb_convert_encoding($row[2], 'UTF-8', 'ISO-8859-15'), 
+                   'cod_grupo' => $row[3], 
+                   'grupo' => mb_convert_encoding($row[4], 'UTF-8', 'ISO-8859-15'),
+                   'cod_cabecera' => $row[5],
+                   'cod_asignacion' => $row[6],
+                   'muestras' => number_format($row[7], 0),
+                   'cantidad' => number_format($row[8], 0),
+                   'porcentaje' => number_format($row[9],2),
+                );
+        }
+        
+        ////Si la consulta no devuelve datos devuelve mensaje
+        if (empty($result))
+        {
+            $code = 204;
+            $message = 'No hay datos';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+
+        ////Caso contrario devuelve el array con los valores
+        }else{
+            $code = 200;
+            $message = 'SI';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        
+        $code = 204;
+        $message = $e->getMessage();
+        return   json_encode([
+            'code' => $code,
+            'message' => $message,
+            'result' => $result,
+    ]);
+    }
+}
+/// Fin Funcion detalle remuestreo de panel de sabor
+
+//// Funcion que devuelve lista de remuestreo de analisis fisico por anio e id_cabecera 
+function Lista_Detalles_Decision_Panelista_Panel_Sabor_Por_IdCabecera ($p_db, $p_cabecera, $p_empresa, $p_sucursal, $p_empleado){
+    $result=[];
+    try {
+        $query    = $p_db->prepare("    SELECT edpkpsdp.kpsdp_cod_kpsdp,   
+                                                edpkpsdp.kpsni_cod_kpsni,   
+                                                trim(edpkpsni.kpsni_nom_kpsni),   
+                                                edpkpsdp.cgana_cod_cgana,   
+                                                trim(saecgana.cgana_desc_cgana),   
+                                                edpkpsdp.kpscp_cod_kpscp,   
+                                                edpkpsdp.kpsap_cod_kpsap,   
+                                                edpkpsdp.kpsdp_mue_kpsdp,   
+                                                edpkpsdp.kpsdp_can_kpsdp,   
+                                                edpkpsdp.kpsdp_por_kpsdp,
+                                                edpkpsde.kpsde_cod_kpsde,
+                                                trim(edpkpsde.kpsde_des_kpsde)  
+                                        FROM edpkpsdp,   
+                                                edpkpsni,   
+                                                saecgana,   
+                                                edpkpsap,
+                                            edpkpsde 
+                                        WHERE ( edpkpsdp.empr_cod_empr = edpkpsni.empr_cod_empr ) and  
+                                                ( edpkpsdp.sucu_cod_sucu = edpkpsni.sucu_cod_sucu ) and  
+                                                ( edpkpsdp.kpsni_cod_kpsni = edpkpsni.kpsni_cod_kpsni ) and  
+                                                ( edpkpsni.empr_cod_empr = saecgana.empr_cod_empr ) and  
+                                                ( edpkpsdp.sucu_cod_sucu = saecgana.sucu_cod_sucu ) and  
+                                                ( edpkpsdp.cgana_cod_cgana = saecgana.cgana_cod_cgana ) and  
+                                                ( edpkpsdp.empr_cod_empr = edpkpsap.empr_cod_empr ) and  
+                                                ( edpkpsdp.sucu_cod_sucu = edpkpsap.sucu_cod_sucu ) and  
+                                                ( edpkpsdp.kpsap_cod_kpsap = edpkpsap.kpsap_cod_kpsap ) and
+                                            ( edpkpsde.kpsde_cod_kpsde = edpkpsdp.kpsde_cod_kpsde ) AND  
+                                                ( edpkpsde.empr_cod_empr =edpkpsdp.empr_cod_empr  ) AND  
+                                                ( edpkpsde.sucu_cod_sucu = edpkpsdp.sucu_cod_sucu  ) AND   
+                                                ( ( edpkpsdp.empr_cod_empr = $p_empresa ) AND  
+                                                ( edpkpsdp.sucu_cod_sucu = $p_sucursal ) AND  
+                                                ( edpkpsdp.kpscp_cod_kpscp = $p_cabecera ) AND  
+                                                ( edpkpsdp.kpsdp_est_kpsdp <> 'I' ) AND  
+                                                ( edpkpsap.kpsap_cod_panel = '$p_empleado' ) )   ");
+        $query->execute();
+
+        //// Asigna los Items de la consulta a un array
+        ////$result =  $query->fetchAll(PDO::FETCH_ASSOC);
+        while($row = $query->fetch(PDO::FETCH_NUM)){
+            $result[] = array(
+                   'cod_detalle'   =>  $row[0],
+                   'cod_nivel' => $row[1], 
+                   'nombre_nivel' =>  mb_convert_encoding($row[2], 'UTF-8', 'ISO-8859-15'), 
+                   'cod_grupo' => $row[3], 
+                   'grupo' => mb_convert_encoding($row[4], 'UTF-8', 'ISO-8859-15'),
+                   'cod_cabecera' => $row[5],
+                   'cod_asignacion' => $row[6],
+                   'muestras' => number_format($row[7], 0),
+                   'cantidad' => number_format($row[8], 0),
+                   'porcentaje' => number_format($row[9],2),
+                   'cod_defecto' => $row[10], 
+                   'defecto' => mb_convert_encoding($row[11], 'UTF-8', 'ISO-8859-15'),
+                );
+        }
+        
+        ////Si la consulta no devuelve datos devuelve mensaje
+        if (empty($result))
+        {
+            $code = 204;
+            $message = 'No hay datos';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+
+        ////Caso contrario devuelve el array con los valores
+        }else{
+            $code = 200;
+            $message = 'SI';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        
+        $code = 204;
+        $message = $e->getMessage();
+        return   json_encode([
+            'code' => $code,
+            'message' => $message,
+            'result' => $result,
+    ]);
+    }
+}
+/// Fin Funcion detalle desicion panelista remuestreo de panel de sabor 
+
 //// Funcion que devuelve lista de remuestreo de analisis fisico por anio y estado 
 function Lista_Cabecera_Remuestreo_Fisico_Por_Estado($p_db, $p_empresa, $p_sucursal, $p_anio, $p_estado, $p_empleado){
+    $result=[];    
     try {
         $query    = $p_db->prepare("  SELECT distinct (edpkecrf.kecrf_cod_kecrf) cod_panel ,   
                                                             (edpkecrf.cccre_cod_cccre) cod_cali,   
@@ -280,7 +463,7 @@ function Lista_Cabecera_Remuestreo_Fisico_Por_Estado($p_db, $p_empresa, $p_sucur
 
 //// Funcion que devuelve lista de remuestreo de analisis fisico por anio e id_cabecera 
 function Lista_Cabecera_Remuestreo_Fisico_Por_IdCabecera ($p_db, $p_empresa, $p_sucursal, $p_anio, $p_cabecera, $p_empleado){
-
+    $result=[];
     try {
         $query    = $p_db->prepare("  SELECT distinct (edpkecrf.kecrf_cod_kecrf) cod_panel ,   
                                                             (edpkecrf.cccre_cod_cccre) cod_cali,   
@@ -374,7 +557,7 @@ function Lista_Cabecera_Remuestreo_Fisico_Por_IdCabecera ($p_db, $p_empresa, $p_
 
 //// Funcion que devuelve lista de remuestreo de analisis fisico por anio e id_cabecera 
 function Lista_Detalles_Remuestreo_Fisico_Por_IdCabecera ($p_db, $p_cabecera, $p_empresa, $p_sucursal){
-
+    $result=[];
     try {
         $query    = $p_db->prepare("    SELECT edpkedrf.kedrf_cod_kedrf cod_detalle,   
                                         edpkedrf.kecrf_cod_kecrf cod_cabecera,   
@@ -450,7 +633,7 @@ function Lista_Detalles_Remuestreo_Fisico_Por_IdCabecera ($p_db, $p_cabecera, $p
 
 //// Funcion que devuelve lista de remuestreo de cabezas cargadas por anio y estado 
 function Lista_Cabecera_Remuestreo_Cabezas_Por_Estado($p_db, $p_empresa, $p_sucursal, $p_anio, $p_estado, $p_empleado){
-
+    $result=[];
     try {
         $query    = $p_db->prepare("  SELECT distinct (edpkecrc.kecrc_cod_kecrc) cod_panel ,   
                                                             (edpkecrc.cccre_cod_cccre) cod_cali,   
@@ -633,7 +816,7 @@ function Lista_Cabecera_Remuestreo_Cabezas_Por_IdCabecera($p_db, $p_empresa, $p_
 
 //// Funcion que devuelve lista de remuestreo de analisis fisico por anio e id_cabecera 
 function Lista_Detalles_Cabezas_Por_IdCabecera ($p_db, $p_cabecera, $p_empresa, $p_sucursal){
-
+    $result=[];
     try {
         $query    = $p_db->prepare("     SELECT distinct edpkedcc.kedcc_cod_kedcc,   
                                                         edpkedcc.kecrc_cod_kecrc,   
@@ -782,7 +965,7 @@ function Lista_Empleados_Por_Cedula($p_db, $p_empresa, $p_sucursal, $p_empleado)
 
 ///// Lista de usuarios por cedula
 function Lista_Usuarios_Por_Cedula($p_db, $p_empresa, $p_sucursal, $p_empleado){
-
+    $result=[];
     try {
         $query    = $p_db->prepare("   SELECT saeusua.usua_cod_usua,   
                                              trim(saeusua.usua_nom_usua),
@@ -848,7 +1031,7 @@ function Lista_Usuarios_Por_Cedula($p_db, $p_empresa, $p_sucursal, $p_empleado){
 
 ///// Lista de defectos activos para bajar
 function Lista_Defectos_Activos_Bajar($p_db, $p_empresa, $p_sucursal){
-
+    $result=[];
     try {
         $query    = $p_db->prepare("  SELECT saecdefe.cdefe_cod_cdefe,   
                                             saecdefe.cdefe_desc_cdefe,   
@@ -918,7 +1101,7 @@ function Lista_Defectos_Activos_Bajar($p_db, $p_empresa, $p_sucursal){
 
 ///// Lista de defectos activos para bajar
 function Lista_Defectos_Activos_Bajar_Por_Id($p_db, $p_empresa, $p_sucursal, $p_codigo){
-
+    $result=[];
     try {
         $query    = $p_db->prepare("  SELECT saecdefe.cdefe_cod_cdefe,   
                                             saecdefe.cdefe_desc_cdefe,   
@@ -989,7 +1172,7 @@ function Lista_Defectos_Activos_Bajar_Por_Id($p_db, $p_empresa, $p_sucursal, $p_
 
 ///// Lista de defectos activos para bajar
 function Lista_Defectos_Activos_Bajar_No_Deta_Fisica($p_db, $p_empresa, $p_sucursal, $p_cabecera){
-
+    $result=[];
     try {
         $query    = $p_db->prepare("  SELECT saecdefe.cdefe_cod_cdefe,   
                                             saecdefe.cdefe_desc_cdefe,   
@@ -1065,7 +1248,7 @@ function Lista_Defectos_Activos_Bajar_No_Deta_Fisica($p_db, $p_empresa, $p_sucur
 
 ///// Lista de ANALISIS CABEZAS activos para bajar
 function Lista_Analisis_Activos_Bajar_No_Deta_Cabezas($p_db, $p_empresa, $p_sucursal, $p_cabecera){
-
+    $result=[];
     try {
         $query    = $p_db->prepare("  SELECT saecana.cana_cod_cana,   
                                                 saecana.cgana_cod_cgana,   
@@ -1136,6 +1319,197 @@ function Lista_Analisis_Activos_Bajar_No_Deta_Cabezas($p_db, $p_empresa, $p_sucu
 }
 /////Fin Lista de ANALISIS CABEZAS activos para bajar
 
+///// Lista de niveles activos panel de sabor
+function Lista_Niveles_Activos_Panel_Sabor($p_db, $p_empresa, $p_sucursal){
+    $result =[];
+    try {
+        $query    = $p_db->prepare("  SELECT edpkpsni.kpsni_cod_kpsni,   
+                                        edpkpsni.cgana_cod_cgana,   
+                                        trim(edpkpsni.kpsni_nom_kpsni)
+                                        FROM edpkpsni  
+                                        WHERE ( edpkpsni.empr_cod_empr = $p_empresa ) AND  
+                                        ( edpkpsni.sucu_cod_sucu = $p_sucursal ) AND  
+                                        ( edpkpsni.kpsni_est_kpsni <> 'I' )    ");
+        $query->execute();
 
+        //// Asigna los Items de la consulta a un array
+        //$result =  $query->fetchAll(PDO::FETCH_ASSOC);
+        while($row = $query->fetch(PDO::FETCH_NUM)){
+            $result[] = array(
+                   'codigo'   =>  $row[0],
+                   'grupo' => $row[1],
+                   'nombre' => mb_convert_encoding($row[2], 'UTF-8', 'ISO-8859-15'),
+                );
+        }
+
+
+        
+        ////Si la consulta no devuelve datos devuelve mensaje
+        if (empty($result))
+        {
+            $code = 204;
+            $message =  'No hay datos';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+
+        ////Caso contrario devuelve el array con los valores
+        }else{
+            $code = 200;
+            $message = 'SI';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        
+        $code = 204;
+        $message =$e->getMessage();
+        return   json_encode([
+            'code' => $code,
+            'message' => $message,
+            'result' => $result,
+    ]);
+    }
+}
+/////Fin Lista de niveles panel de sabor
+
+///// Lista de niveles activos no detalles panel de sabor
+function Lista_Niveles_Activos_No_Deta_Panel_Sabor($p_db, $p_empresa, $p_sucursal, $p_cabecera){
+    $result=[];
+    try {
+        $query    = $p_db->prepare("  SELECT edpkpsni.kpsni_cod_kpsni,   
+                                        edpkpsni.cgana_cod_cgana,   
+                                        edpkpsni.kpsni_nom_kpsni  
+                                        FROM edpkpsni  
+                                        WHERE ( edpkpsni.empr_cod_empr = $p_empresa ) AND  
+                                        ( edpkpsni.sucu_cod_sucu = $p_sucursal ) AND  
+                                        ( edpkpsni.kpsni_est_kpsni <> 'I' )  and 
+                                        (edpkpsni.kpsni_cod_kpsni not in (  SELECT edpkpspd.kpsni_cod_kpsni  
+                                                                            FROM edpkpspd  
+                                                                            WHERE ( edpkpspd.empr_cod_empr = $p_empresa ) AND  
+                                                                            ( edpkpspd.sucu_cod_sucu = $p_sucursal ) AND  
+                                                                            ( edpkpspd.kpscp_cod_kpscp = $p_cabecera ) AND  
+                                                                            ( edpkpspd.kpspd_est_kpspd <> 'I' ) ))   ");
+                                        $query->execute();
+
+                                        //// Asigna los Items de la consulta a un array
+        //$result =  $query->fetchAll(PDO::FETCH_ASSOC);
+        while($row = $query->fetch(PDO::FETCH_NUM)){
+            $result[] = array(
+                   'codigo'   =>  $row[0],
+                   'grupo' => $row[1],
+                   'nombre' => mb_convert_encoding($row[2], 'UTF-8', 'ISO-8859-15'),
+                );
+        }
+
+
+        
+        ////Si la consulta no devuelve datos devuelve mensaje
+        if (empty($result))
+        {
+            $code = 204;
+            $message =  'No hay datos';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+
+        ////Caso contrario devuelve el array con los valores
+        }else{
+            $code = 200;
+            $message = 'SI';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        
+        $code = 204;
+        $message =$e->getMessage();
+        return   json_encode([
+            'code' => $code,
+            'message' => $message,
+            'result' => $result,
+    ]);
+    }
+}
+/////Fin Lista de niveles panel de sabor
+
+///// Lista de defectos panel de sabor
+function Lista_Defectos_Panel_Sabor($p_db, $p_empresa, $p_sucursal){
+    $result=[];
+    try {
+        $query    = $p_db->prepare("   SELECT edpkpsde.kpsde_cod_kpsde,
+                                                edpkpsde.cgana_cod_cgana ,
+                                                trim(edpkpsde.kpsde_des_kpsde)
+                                        FROM edpkpsde  
+                                        WHERE ( edpkpsde.empr_cod_empr = $p_empresa ) AND  
+                                                ( edpkpsde.sucu_cod_sucu = $p_sucursal ) AND  
+                                                ( edpkpsde.kpsde_est_kpsde <> 'I' ) 
+                                   ");
+                                        $query->execute();
+
+                                        //// Asigna los Items de la consulta a un array
+        //$result =  $query->fetchAll(PDO::FETCH_ASSOC);
+        while($row = $query->fetch(PDO::FETCH_NUM)){
+            $result[] = array(
+                   'codigo'   =>  $row[0],
+                   'grupo' => $row[1],
+                   'nombre' => mb_convert_encoding($row[2], 'UTF-8', 'ISO-8859-15'),
+                );
+        }
+
+
+        
+        ////Si la consulta no devuelve datos devuelve mensaje
+        if (empty($result))
+        {
+            $code = 204;
+            $message =  'No hay datos';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+
+        ////Caso contrario devuelve el array con los valores
+        }else{
+            $code = 200;
+            $message = 'SI';
+    
+            return  json_encode([
+                    'code' => $code,
+                    'message' => $message,
+                    'result' => $result,
+            ]);
+        }
+        
+    } catch (PDOException $e) {
+        
+        $code = 204;
+        $message =$e->getMessage();
+        return   json_encode([
+            'code' => $code,
+            'message' => $message,
+            'result' => $result,
+    ]);
+    }
+}
+/////Fin Lista de niveles panel de sabor
   
 ?>

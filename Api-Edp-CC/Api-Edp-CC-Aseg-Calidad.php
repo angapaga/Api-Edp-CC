@@ -185,4 +185,45 @@ if ($postjson['peticion'] == 'Insertar_detalles_cabezas')
 }
 /// Fin Insertar_detalles_Remuestra_cabezas($p_db, $p_empresa, $p_sucursal, $p_cabecera, $p_analisis, $p_cantidad, $p_usuario)
 
+//// Resolver peticion Lista_Niveles_Activos_Panel_Sabor($p_db, $p_empresa, $p_sucursal)
+if ($postjson['peticion'] == 'Lista_niveles_activos')
+{
+    echo Lista_Niveles_Activos_Panel_Sabor($db, $gl_empresa, $gl_sucursal);
+}
+/// Fin Lista_Niveles_Activos_Panel_Sabor($p_db, $p_empresa, $p_sucursal)
+
+//// Resolver peticion Lista_Niveles_Activos_No_Deta_Panel_Sabor($p_db, $p_empresa, $p_sucursal, $p_cabecera)
+if ($postjson['peticion'] == 'Lista_niveles_activos_bajar')
+{
+    $cabecera = $postjson['cabecera'] ;
+    echo Lista_Niveles_Activos_No_Deta_Panel_Sabor($db, $gl_empresa, $gl_sucursal, $cabecera);
+}
+/// Fin Lista_Niveles_Activos_No_Deta_Panel_Sabor($p_db, $p_empresa, $p_sucursal, $p_cabecera)
+
+//// Resolver peticion Lista_Detalles_Panel_Sabor_Por_IdCabecera ($p_db, $p_cabecera, $p_empresa, $p_sucursal, $p_empleado)
+if ($postjson['peticion'] == 'Detalles_panel_sabor')
+{
+    $cabecera = $postjson['cabecera'] ;
+    $empleado = $postjson['empleado'] ;
+    echo Lista_Detalles_Panel_Sabor_Por_IdCabecera ($db, $cabecera, $gl_empresa, $gl_sucursal, $empleado);
+}
+/// Fin Lista_Detalles_Panel_Sabor_Por_IdCabecera ($p_db, $p_cabecera, $p_empresa, $p_sucursal, $p_empleado)
+
+//// Resolver peticion Lista_Detalles_Decision_Panelista_Panel_Sabor_Por_IdCabecera
+if ($postjson['peticion'] == 'Detalles_Decision_Panelista_panel_sabor')
+{
+    $cabecera = $postjson['cabecera'] ;
+    $empleado = $postjson['empleado'] ;
+    echo Lista_Detalles_Decision_Panelista_Panel_Sabor_Por_IdCabecera ($db, $cabecera, $gl_empresa, $gl_sucursal, $empleado);
+}
+/// Fin Lista_Detalles_Panel_Sabor_Por_IdCabecera ($p_db, $p_cabecera, $p_empresa, $p_sucursal, $p_empleado)
+
+//// Resolver peticion Lista_Defectos_Panel_Sabor($p_db, $p_empresa, $p_sucursal)
+if ($postjson['peticion'] == 'Lista_defectos_panel_sabor')
+{
+    echo Lista_Defectos_Panel_Sabor($db, $gl_empresa, $gl_sucursal);
+}
+/// Fin Lista_Defectos_Panel_Sabor($p_db, $p_empresa, $p_sucursal)
+
+
 ?>
