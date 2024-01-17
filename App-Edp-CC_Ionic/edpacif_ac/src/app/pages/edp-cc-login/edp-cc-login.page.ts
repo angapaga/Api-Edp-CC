@@ -87,7 +87,34 @@ export class EdpCcLoginPage implements OnInit {
           }
         },
         (error) => {
-          reject("Error en la solicitud HTTP"); // Manejo de errores de la solicitud HTTP
+          this.toast_ok("No hay Respuesta del Server Web " + error.message,'danger', 'top'); // Manejo de errores de la solicitud HTTP
+        }
+      );
+    });
+  }
+
+  prueba_conect() {
+    return new Promise((resolve, reject) => {
+      this.periods = null;
+      this.periods = [];
+  
+      let body = {
+        peticion: "Dos_periodos_activos"
+      };
+  
+      //this.postPvdr.postData(body, 'Api-Edp-CC-Aseg-Calidad.php').subscribe(
+        this.postPvdr.postData(body, 'Api-Edp-CC-General.php').subscribe(
+        (data: any) => {
+
+          if (data.code == 200) {
+            this.toast_ok('Conexión Correcta al Web Server','danger', 'top')
+          } else {
+            this.toast_ok(data.result,'danger', 'top')
+            //this.presentAlert('', data.result); // Puedes enviar el mensaje de error como argumento a reject
+          }
+        },
+        (error) => {
+          this.toast_ok("No hay Respuesta del Server Web " + error.message,'danger', 'top'); // Manejo de errores de la solicitud HTTP
         }
       );
     });
@@ -127,11 +154,12 @@ export class EdpCcLoginPage implements OnInit {
           }
         },
         async (error) => {
-          this.toast_ok('Algo Salió Mal!!!','danger', 'top');
+          this.toast_ok('Algo Salió Mal!!!'+error.message,'danger', 'top');
           
           this.username ='';
           this.password= '';
-        }
+        },
+        
       );
     });
   }

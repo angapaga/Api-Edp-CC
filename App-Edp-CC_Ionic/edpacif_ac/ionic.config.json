@@ -1,5 +1,5 @@
 {
-  "name": "edpacif_ac",
+  "name": "edpacif Aseg CC",
   "integrations": {
     "capacitor": {}
   },
@@ -15,6 +15,12 @@
   "android": {
     "allowMixedContent": true
   },
+  "proxies": [
+    {
+      "path": "/Api-Edp-CC",
+      "proxyUrl": "http://localhost:8100/Api-Edp-CC"
+    }
+  ],
 
   "type": "angular"
 }

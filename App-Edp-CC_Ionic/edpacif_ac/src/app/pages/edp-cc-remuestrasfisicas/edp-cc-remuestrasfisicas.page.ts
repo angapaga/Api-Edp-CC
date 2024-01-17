@@ -146,7 +146,7 @@ mostrar_pe(cabecera:any) {
           for (let get_lista of data.result) {
             this.lista_pe.push(get_lista);
             this.contar = this.contar +1;
-            //console.log(this.lista_pe);
+            // console.log(this.lista_pe);
           }
           resolve(this.lista_pe);
           this.total = this.lista_pe.length;
@@ -188,7 +188,7 @@ mostrar_detalles_pr(cabecera:any) {
             this.lista_detalles_pr.push(get_listad);
           }
           resolve(this.lista_detalles_pr);
-          //console.log(this.lista_detalles_pr);
+          console.log(this.lista_detalles_pr);
         } else {
           this.toast_ok(data.message,'danger', 'middle')
           //this.presentAlert('', data.result); // Puedes enviar el mensaje de error como argumento a reject
@@ -335,6 +335,40 @@ process_doc()
       },
       (error) => {
         reject("Error en la solicitud HTTP"); // Manejo de errores de la solicitud HTTP
+      }
+    );
+  });
+
+}
+
+remove_detalle(detalle:any)
+{
+  return new Promise((resolve, reject) => {
+    this.defects = null;
+    this.defects = [];
+    //console.log(this.periodo);
+    let body = {
+      peticion: "Anular_detalles_fisica",
+      detalle: detalle,
+      cod_usua: this.cod_usua,
+      periodo: this.periodo
+    };
+
+    //console.log(this.muestras);
+
+    this.postPvdr.postData(body, 'Api-Edp-CC-Aseg-Calidad.php').subscribe(
+      (data: any) => {
+
+        if (data.code == 200) {
+          this.toast_ok(data.message,'success', 'top')
+          this.mostrar_detalles_pr(this.cabecera);
+        } else {
+          this.toast_ok(data.message,'danger', 'top')
+        }
+
+      },
+      (error) => {
+        this.toast_ok("Error en la solicitud HTTP "+error.message,'danger', 'top'); // Manejo de errores de la solicitud HTTP
       }
     );
   });

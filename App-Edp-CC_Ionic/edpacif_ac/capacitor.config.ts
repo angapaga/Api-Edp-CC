@@ -6,7 +6,10 @@ const config: CapacitorConfig = {
   webDir: 'www',
   server: {
     androidScheme: 'http',
-    cleartext: true
+    //url: 'http://192.168.0.101',
+    cleartext: true,
+    allowNavigation: ["http://192.168.0.101/Api-Edp-CC/"],
+
   }
 };
 

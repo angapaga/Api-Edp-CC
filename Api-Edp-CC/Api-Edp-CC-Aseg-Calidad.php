@@ -11,8 +11,8 @@ include "Api-Edp-CC-Funciones-Transac.php";
 //"cod_usua" : "",
 //"periodo": "", 
 
- ini_set('display_errors', 1);
- error_reporting(E_ALL);
+//  ini_set('display_errors', 1);
+//  error_reporting(E_ALL);
 
 /////// Resolver petición Lista_Cabecera_Paneles_Sabores_Por_Estado($p_db, $p_empresa, $p_sucursal, $p_anio, $p_estado, $p_empleado)
 if ($postjson['peticion'] == 'cabecera_panel_estado')
@@ -82,7 +82,7 @@ if ($postjson['peticion'] == 'detalles_remuestra_cabezas_cabecera')
     $cabecera = $postjson['cabecera'] ;
     echo Lista_Detalles_Cabezas_Por_IdCabecera ($db, $cabecera, $gl_empresa, $gl_sucursal);
 }
-/// Fin Lista_Detalles_Cabezas_Por_IdCabecera ($p_db, $p_cabecera, $p_empresa, $p_sucursal)
+/// Fin Lista_Detalles_Cabezas_Por_IdCabecera 
 
 /// Resolver peticion Lista_empleados_Por_Cedula($p_db, $p_empresa, $p_sucursal, $p_empleado)
 if ($postjson['peticion'] == 'empleados_cedula')
@@ -157,7 +157,7 @@ if ($postjson['peticion'] == 'Procesa_muestras_fisica')
     $cabecera = $postjson['cabecera'] ;
     echo Procesa_Remuestra_fisica($db, $gl_empresa, $gl_sucursal, $cabecera, $cod_usua);
 }
-/// Fin Procesa_Remuestra_fisica($p_db, $p_empresa, $p_sucursal, $p_cabecera, $p_usuario)
+/// Fin Procesa_Remuestra_fisica
 
 //// Resolver peticion Lista_Analisis_Activos_Bajar_No_Deta_Cabezas($p_db, $p_empresa, $p_sucursal, $p_cabecera)
 if ($postjson['peticion'] == 'Analisis_Activos_Bajar')
@@ -165,15 +165,15 @@ if ($postjson['peticion'] == 'Analisis_Activos_Bajar')
     $cabecera = $postjson['cabecera'] ;
     echo Lista_Analisis_Activos_Bajar_No_Deta_Cabezas($db, $gl_empresa, $gl_sucursal, $cabecera);
 }
-/// Fin Lista_Analisis_Activos_Bajar_No_Deta_Cabezas($p_db, $p_empresa, $p_sucursal, $p_cabecera)
+/// Fin Lista_Analisis_Activos_Bajar_No_Deta_Cabezas
 
-//// Resolver peticion para actualizar estado de cabeceras cabezas Procesa_Remuestra_cabezas($p_db, $p_empresa, $p_sucursal, $p_cabecera, $p_usuario)
+//// Resolver peticion para actualizar estado de cabeceras cabezas Procesa_Remuestra_cabezas
 if ($postjson['peticion'] == 'Procesa_muestras_cabezas')
 {
     $cabecera = $postjson['cabecera'] ;
     echo Procesa_Remuestra_cabezas($db, $gl_empresa, $gl_sucursal, $cabecera, $cod_usua);
 }
-/// Fin Procesa_Remuestra_cabezas($p_db, $p_empresa, $p_sucursal, $p_cabecera, $p_usuario)
+/// Fin Procesa_Remuestra_cabezas
 
 //// Resolver peticion Insertar_detalles_Remuestra_cabezas($p_db, $p_empresa, $p_sucursal, $p_cabecera, $p_analisis, $p_cantidad, $p_usuario)
 if ($postjson['peticion'] == 'Insertar_detalles_cabezas')
@@ -183,14 +183,14 @@ if ($postjson['peticion'] == 'Insertar_detalles_cabezas')
     $cantidad = $postjson['cantidad'] ;
     echo Insertar_detalles_Remuestra_cabezas($db, $gl_empresa, $gl_sucursal, $cabecera, $analisis, $cantidad, $cod_usua);
 }
-/// Fin Insertar_detalles_Remuestra_cabezas($p_db, $p_empresa, $p_sucursal, $p_cabecera, $p_analisis, $p_cantidad, $p_usuario)
+/// Fin Insertar_detalles_Remuestra_cabezas
 
 //// Resolver peticion Lista_Niveles_Activos_Panel_Sabor($p_db, $p_empresa, $p_sucursal)
 if ($postjson['peticion'] == 'Lista_niveles_activos')
 {
     echo Lista_Niveles_Activos_Panel_Sabor($db, $gl_empresa, $gl_sucursal);
 }
-/// Fin Lista_Niveles_Activos_Panel_Sabor($p_db, $p_empresa, $p_sucursal)
+/// Fin Lista_Niveles_Activos_Panel_Sabor
 
 //// Resolver peticion Lista_Niveles_Activos_No_Deta_Panel_Sabor($p_db, $p_empresa, $p_sucursal, $p_cabecera)
 if ($postjson['peticion'] == 'Lista_niveles_activos_bajar')
@@ -198,7 +198,7 @@ if ($postjson['peticion'] == 'Lista_niveles_activos_bajar')
     $cabecera = $postjson['cabecera'] ;
     echo Lista_Niveles_Activos_No_Deta_Panel_Sabor($db, $gl_empresa, $gl_sucursal, $cabecera);
 }
-/// Fin Lista_Niveles_Activos_No_Deta_Panel_Sabor($p_db, $p_empresa, $p_sucursal, $p_cabecera)
+/// Fin Lista_Niveles_Activos_No_Deta_Panel_Sabor
 
 //// Resolver peticion Lista_Detalles_Panel_Sabor_Por_IdCabecera ($p_db, $p_cabecera, $p_empresa, $p_sucursal, $p_empleado)
 if ($postjson['peticion'] == 'Detalles_panel_sabor')
@@ -207,7 +207,7 @@ if ($postjson['peticion'] == 'Detalles_panel_sabor')
     $empleado = $postjson['empleado'] ;
     echo Lista_Detalles_Panel_Sabor_Por_IdCabecera ($db, $cabecera, $gl_empresa, $gl_sucursal, $empleado);
 }
-/// Fin Lista_Detalles_Panel_Sabor_Por_IdCabecera ($p_db, $p_cabecera, $p_empresa, $p_sucursal, $p_empleado)
+/// Fin Lista_Detalles_Panel_Sabor_Por_IdCabecera 
 
 //// Resolver peticion Lista_Detalles_Decision_Panelista_Panel_Sabor_Por_IdCabecera
 if ($postjson['peticion'] == 'Detalles_Decision_Panelista_panel_sabor')
@@ -216,14 +216,32 @@ if ($postjson['peticion'] == 'Detalles_Decision_Panelista_panel_sabor')
     $empleado = $postjson['empleado'] ;
     echo Lista_Detalles_Decision_Panelista_Panel_Sabor_Por_IdCabecera ($db, $cabecera, $gl_empresa, $gl_sucursal, $empleado);
 }
-/// Fin Lista_Detalles_Panel_Sabor_Por_IdCabecera ($p_db, $p_cabecera, $p_empresa, $p_sucursal, $p_empleado)
+/// Fin Lista_Detalles_Panel_Sabor_Por_IdCabecera
 
 //// Resolver peticion Lista_Defectos_Panel_Sabor($p_db, $p_empresa, $p_sucursal)
 if ($postjson['peticion'] == 'Lista_defectos_panel_sabor')
 {
     echo Lista_Defectos_Panel_Sabor($db, $gl_empresa, $gl_sucursal);
 }
-/// Fin Lista_Defectos_Panel_Sabor($p_db, $p_empresa, $p_sucursal)
+/// Fin Lista_Defectos_Panel_Sabor
+
+
+//// Resolver peticion Anular_detalles_Remuestra_Fisica($p_db, $p_empresa, $p_sucursal, $p_detalle, $p_usuario)
+if ($postjson['peticion'] == 'Anular_detalles_fisica')
+{
+    $detalle = $postjson['detalle'] ;
+    echo Anular_detalles_Remuestra_Fisica($db, $gl_empresa, $gl_sucursal, $detalle, $cod_usua);
+}
+/// Fin Anular_detalles_Remuestra_Fisica
+
+//// Resolver peticion Anular_detalles_Remuestra_Cabezas_Cargadas($p_db, $p_empresa, $p_sucursal, $p_detalle, $p_usuario)
+if ($postjson['peticion'] == 'Anular_detalles_cabezas')
+{
+    $detalle = $postjson['detalle'] ;
+    echo Anular_detalles_Remuestra_Cabezas_Cargadas($db, $gl_empresa, $gl_sucursal, $detalle, $cod_usua);
+}
+/// Fin Anular_detalles_Remuestra_Cabezas_Cargadas
+
 
 
 ?>

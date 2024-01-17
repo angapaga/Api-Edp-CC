@@ -76,12 +76,15 @@
       <ion-list >
         <ion-item color="medium">
           <ion-label size="6">Defecto</ion-label>
-          <ion-label size="6">Cantidad</ion-label>
+          <ion-label size="5">Cantidad</ion-label>
+          <ion-label size="1">Opc.</ion-label>
         </ion-item>
         <!--  -->
         <ion-item *ngFor="let get_listad of lista_detalles_pr" >
           <ion-label size="6">{{get_listad.defe}}</ion-label>  
-          <ion-label size="6">{{get_listad.cantidad}}</ion-label> 
+          <ion-label size="5">{{get_listad.cantidad}}</ion-label>
+          <ion-label size="1" class="text-center"><ion-icon name="trash-outline" ></ion-icon> </ion-label>
+          
         </ion-item>
   
       </ion-list>

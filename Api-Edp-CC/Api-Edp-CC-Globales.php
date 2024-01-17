@@ -22,4 +22,6 @@ $gd_hora = date('h:i');
 
 $gs_aguaje = $postjson['periodo'] ;
 
+$gl_muestras_sabor = 25;
+
 ?>
