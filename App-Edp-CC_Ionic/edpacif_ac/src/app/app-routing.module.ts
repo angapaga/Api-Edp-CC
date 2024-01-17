@@ -62,6 +62,10 @@ const routes: Routes = [
   {
     path: 'edp-cc-cabezascargadas',
     loadChildren: () => import('./pages/edp-cc-cabezascargadas/edp-cc-cabezascargadas.module').then( m => m.EdpCcCabezascargadasPageModule)
+  },
+  {
+    path: 'edp-cc-remuestrapanelsabor',
+    loadChildren: () => import('./pages/edp-cc-remuestrapanelsabor/edp-cc-remuestrapanelsabor.module').then( m => m.EdpCcRemuestrapanelsaborPageModule)
   }
 
 ];

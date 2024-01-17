@@ -17,7 +17,13 @@ export class EdpCcPanelespendientesPage implements OnInit {
   lista_pe:any;
   contar :any;
   total :any;
-
+  sesion:any;
+  cedula:any;
+  cod_usua:any;
+  username:any;
+  cod_asignacion:any;
+  periodo:any;
+  cabecera:any;
   constructor(private navCtrl: NavController, 
               private toastController: ToastController,
               private alertController: AlertController,
@@ -26,6 +32,23 @@ export class EdpCcPanelespendientesPage implements OnInit {
               private router: Router) { }
 
   ngOnInit() {
+    this.storage.create();
+    this.storage.get('session_storage').then((res) => {
+      this.sesion = res; 
+      this.storage.get('periodo').then((res) => {
+        this.periodo = res; 
+          this.storage.get('cabecera_panel').then((res) => {
+            this.cabecera = res; 
+            this.mostrar_pe();
+          //console.log(this.cabecera);
+          }); 
+
+          this.cedula = this.sesion[0].usua_cod_empl;
+          this.cod_usua = this.sesion[0].cod_usua;
+          this.username = this.sesion[0].username;
+          //console.log(this.username);
+    });
+  });
   }
 
   regresar() {
@@ -34,7 +57,7 @@ export class EdpCcPanelespendientesPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.mostrar_pe();
+    //this.mostrar_pe();
   }
 
   async toast_ok(msg:any,color:any, position:any){
@@ -69,10 +92,10 @@ mostrar_pe() {
 
     let body = {
       peticion: "cabecera_panel_estado",
-      cod_usua: "45",
+      cod_usua: this.cod_usua,
       estado: "PE",
-      periodo: "01",
-      empleado:"1313021543"
+      periodo: this.periodo,
+      empleado: this.cedula
     };
 
     this.postPvdr.postData(body, 'Api-Edp-CC-Aseg-Calidad.php').subscribe(
@@ -100,14 +123,11 @@ mostrar_pe() {
 }
 
 editar_doc(cabecera:any){
-  this.storage.set('cabecera', cabecera);
-  this.router.navigate(['/editar-doc-rc']);
+  this.toast_ok('Panel de sabores está en etapa de pruebas', 'danger','middle');
+  // this.storage.set('cabecera_panel', cabecera);
+  // this.router.navigate(['/edp-cc-remuestrapanelsabor']);
 }
 
-onButtonClick(item: any) {
-  // Lógica para manejar el clic en el botón para el elemento específico.
-  this.toast_ok('Panel de sabores está en etapa de pruebas', 'danger','middle');
-}
 
 
 }

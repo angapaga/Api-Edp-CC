@@ -9,11 +9,12 @@ import { Router } from "@angular/router";
 import { DataService } from "../../services/data.service"; 
 
 @Component({
-  selector: 'app-edp-cc-remuestrasfisicas',
-  templateUrl: './edp-cc-remuestrasfisicas.page.html',
-  styleUrls: ['./edp-cc-remuestrasfisicas.page.scss'],
+  selector: 'app-edp-cc-remuestrapanelsabor',
+  templateUrl: './edp-cc-remuestrapanelsabor.page.html',
+  styleUrls: ['./edp-cc-remuestrapanelsabor.page.scss'],
 })
-export class EdpCcRemuestrasfisicasPage implements OnInit {
+export class EdpCcRemuestrapanelsaborPage implements OnInit {
+
   lista_pe:any;
   contar :any;
   total :any;
@@ -44,7 +45,7 @@ export class EdpCcRemuestrasfisicasPage implements OnInit {
       this.sesion = res; 
       this.storage.get('periodo').then((res) => {
         this.periodo = res; 
-          this.storage.get('cabecera_fisica').then((res) => {
+          this.storage.get('cabecera_panel').then((res) => {
             this.cabecera = res; 
             this.mostrar_pe(this.cabecera);
             this.mostrar_detalles_pr(this.cabecera);
@@ -126,11 +127,11 @@ mostrar_pe(cabecera:any) {
     this.lista_pe = [];
 
     let body = {
-      peticion: "cabecera_remuestra_fisico_cabecera",
+      peticion: "cabecera_panel_cabecera",
       cod_usua: this.cod_usua,
       cabecera: cabecera,
       periodo: this.periodo,
-      empleado:this.cedula
+      empleado: this.cedula
     };
     //console.log(this.cedula);
 

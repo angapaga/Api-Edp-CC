@@ -311,4 +311,62 @@ process_doc()
 
 }
 
+async anular_detalle(detalle:any) {
+  let alert = await this.alertController.create({
+    header: 'Advertencia',
+    message: 'Esta seguro que desea eliminar este item!!!',
+    buttons: [
+      {
+        text: 'No',
+        role: 'cancel',
+        handler: () => {
+        }
+      },
+      {
+        text: 'Si',
+        handler: () => {
+          this.remove_detalle(detalle)
+        }
+      }
+    ]
+  });
+    await alert.present();
+    
+}
+
+remove_detalle(detalle:any)
+{
+  return new Promise((resolve, reject) => {
+    this.defects = null;
+    this.defects = [];
+    //console.log(this.periodo);
+    let body = {
+      peticion: "Anular_detalles_cabezas",
+      detalle: detalle,
+      cod_usua: this.cod_usua,
+      periodo: this.periodo
+    };
+
+    //console.log(this.muestras);
+
+    this.postPvdr.postData(body, 'Api-Edp-CC-Aseg-Calidad.php').subscribe(
+      (data: any) => {
+
+        if (data.code == 200) {
+          this.toast_ok(data.message,'success', 'top')
+          this.mostrar_detalles_pr(this.cabecera);
+          this.get_analisis();
+        } else {
+          this.toast_ok(data.message,'danger', 'top')
+        }
+
+      },
+      (error) => {
+        this.toast_ok("Error en la solicitud HTTP "+error.message,'danger', 'top'); // Manejo de errores de la solicitud HTTP
+      }
+    );
+  });
+
+}
+
 }

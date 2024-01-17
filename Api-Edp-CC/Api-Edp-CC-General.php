@@ -1,5 +1,4 @@
 <?php
-include "Api-Edp-CC-Header.php";
 // INFORMIX SQL permite la conexión usando sql driver PDO
  try {
     ///Zona horaria local

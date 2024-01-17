@@ -4,7 +4,7 @@
       <ion-back-button (click)="regresar()" defaultHref="/"></ion-back-button>
     </ion-buttons>
     <!-- <img style="zoom: 0.5;" src="assets/img/logo.jpg" slot="start" [routerLink]="['/menu-doc-rc']"> -->
-    <ion-title style="font-size: 30px; text-align: center;" ><h2>REMUESTRAS CABEZAS</h2></ion-title>
+    <ion-title style="font-size: 30px; text-align: center;" ><h2>REMUESTRAS PANEL SABOR</h2></ion-title>
     <!-- <ion-title slot="end">{{nom_usua}}</ion-title> -->
   </ion-toolbar>
 </ion-header>
@@ -30,18 +30,15 @@
     <ion-card-content>
       <ion-list >
         <ion-item color="medium">
-          <ion-label size="2">Doc.</ion-label>
+          <ion-label size="3">Doc.</ion-label>
           <ion-label size="6">Analista</ion-label>
-          <ion-label size="2">Calidad</ion-label>
-          <!-- <ion-label size="2">Muestras</ion-label> -->
+          <ion-label size="3">Calidad</ion-label>
         </ion-item>
         <!--  -->
         <ion-item *ngFor="let get_lista of lista_pe" >
-          <ion-label size="6"> {{get_lista.cod_panel}}</ion-label> 
-          <ion-label size="2">{{get_lista.analista}}</ion-label>
-          <ion-label size="2" >{{get_lista.docu_cali}} - {{get_lista.serie_cali}}</ion-label>          
-          <!-- <ion-label size="2" ><ion-input type="number" [disabled]="act_muestras" label="." name="muestras" [(ngModel)]="muestras" placeholder="Ingresa muestras" value="muestras"></ion-input> </ion-label> -->
-          
+          <ion-label size="3"> {{get_lista.cod_panel}}</ion-label> 
+          <ion-label size="6">{{get_lista.analista}}</ion-label>
+          <ion-label size="3" >{{get_lista.docu_cali}} - {{get_lista.serie_cali}}</ion-label>          
         </ion-item>
   
       </ion-list>
@@ -57,7 +54,7 @@
       <ion-card-subtitle>
         <ion-row>
           <ion-col size="6">
-            <ion-select expand="block" size="6" ok-text="Aceptar Selección" cancel-text="Cerrar" placeholder="Seleccione Analisis" [(ngModel)]="defecto" [ngModelOptions]="{standalone: true}">
+            <ion-select expand="block" size="6" ok-text="Aceptar Selección" cancel-text="Cerrar" placeholder="Seleccione Defecto" [(ngModel)]="defecto" [ngModelOptions]="{standalone: true}">
               <ion-select-option *ngFor="let defec of defects" value="{{defec.codigo}}">{{defec.nombre}}</ion-select-option>     
             </ion-select>
           </ion-col> 
@@ -75,21 +72,20 @@
     <ion-card-content>
       <ion-list >
         <ion-item color="medium">
-          <ion-label size="6">Análisis</ion-label>
-          <ion-label size="3">Muestras</ion-label>
-          <ion-label size="2">Cantidad</ion-label>
+          <ion-label size="6">Defecto</ion-label>
+          <ion-label size="5" class="ion-text-center">Cantidad</ion-label>
           <ion-label size="1" class="ion-text-center">Opc.</ion-label>
         </ion-item>
         <!--  -->
         <ion-item *ngFor="let get_listad of lista_detalles_pr" >
-          <ion-label size="6">{{get_listad.analisis}}</ion-label> 
-          <ion-label size="3" class="ion-text-center">{{get_listad.muestras}}</ion-label>  
-          <ion-label size="2" class="ion-text-center">{{get_listad.cantidad}}</ion-label> 
+          <ion-label size="6">{{get_listad.defe}}</ion-label>  
+          <ion-label size="5" class="ion-text-center">{{get_listad.cantidad}}</ion-label>
           <ion-label size="1" class="ion-text-center">
             <ion-button slot="end" (click)="anular_detalle(get_listad.cod_detalle)" color="warning">
               <ion-icon name="trash-outline" ></ion-icon>
             </ion-button>
           </ion-label>
+          
         </ion-item>
   
       </ion-list>

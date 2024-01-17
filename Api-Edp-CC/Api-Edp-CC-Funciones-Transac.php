@@ -507,7 +507,7 @@ function Insertar_detalles_Remuestra_cabezas($p_db, $p_empresa, $p_sucursal, $p_
                                                                 kearc_cod_kearc,   cgana_cod_cgana,     cana_cod_cana,
                                                                 kedcc_can_kedcc,     kedcc_mue_kedcc,      kedcc_por_kedcc,
                                                                 kedcc_est_kedcc,      kedcc_fes_crea,       kedcc_usu_crea,
-                                                                kedrc_ing_appcc )
+                                                                kedcc_ing_appcc )
                                                         VALUES ( $p_empresa, $p_sucursal, $p_cabecera,
                                                                 (SELECT edpkearc.kearc_cod_kearc
                                                                             FROM edpkearc
